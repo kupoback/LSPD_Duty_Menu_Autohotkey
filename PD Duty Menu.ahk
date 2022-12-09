@@ -31,7 +31,6 @@ Ins::
     Gui, Add, Edit, w300 vRespondId,
     Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Set GPS
     Gui, Add, Button, Default x80 gRespondConfirm w80, Ok
-	Gui, Add, Button, Default x+0 gRespondCancel w80, Cancel
     Gui, Show,, Respond ID
     return
 
@@ -42,17 +41,10 @@ Ins::
                 send, t/setgps %RespondId%{enter}
             } else if (RespondType="Respond To Call") {
                 send, t/resp %RespondId%{enter}
-            } else {
-                MsgBox,, ERROR, Else Error.
             }
         } else {
             MsgBox,, ERROR, The respond ID empty. Must enter a value.
         }
-    return
-
-    RespondCancel:
-        Gui, Submit
-        Gui, Destroy
     return
 return
 
@@ -159,10 +151,12 @@ Menu, FullMenuMe, Add, Scene Management, :SceneMenu
 Menu, InmatePro, Add, Uncuff, PDUncuff
 Menu, InmatePro, Add, Release form, PDReleaseForm
 Menu, InmatePro, Add, Mugshot, PDMugshot
+Menu, InmatePro, Add, On Scene Mugshot, PDOnSceneMugshot
 Menu, InmatePro, Add, Fingerprints, PDFingerprints
 Menu, FullMenuMe, Add, Inmate Processing, :InmatePro
 
 Menu, FullMenuMe, Add, Tow Vehicle, TowVehicle
+Menu, FullMenuMe, Add, Untow Vehicle, UnTowVehicle
 
 Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :FullMenuMe
 
@@ -1168,7 +1162,6 @@ CoordMode, Menu, Screen
 Menu, FullMenu, Show, % A_ScreenWidth/2, % A_ScreenHeight/2
 return
 
-
 ;Handler for animations
 MenuHandler:
 	send, t/anim %A_ThisMenuItem% {enter}
@@ -1176,33 +1169,33 @@ return
 
 ;Vehicle spawn handlers
 SpawnCrownVic:
-	send, t/fspawn police 5 {enter}
+	send, t/fspawn police 5{enter}
 return
 
 SpawnBuffalo:
-	send, t/fspawn police2 5 {enter}
+	send, t/fspawn police2 5{enter}
 return
 
 SpawnInterceptor:
-	send, t/fspawn police3 5 {enter}
+	send, t/fspawn police3 5{enter}
 return
 
 SpawnScout:
-	send, t/fspawn policescout {enter}
+	send, t/fspawn policescout{enter}
 return
 
 SpawnVan:
-	send, t/fspawn policet {enter}
+	send, t/fspawn policet{enter}
 return
 
 SpawnFlatbed:
-	send, t/fspawn flatbed {enter}
+	send, t/fspawn flatbed{enter}
 return
 
 ParkSpawn:
-	send, t/delcruiser {enter}
+	send, t/delcruiser{enter}
 	sleep 450
-	send, t {up} {enter}
+	send, t {up}{enter}
 return
 
 ;Unit name handlers
@@ -1247,9 +1240,9 @@ JoinOtherUnit:
             } else {
                 MsgBox,, ERROR, You must select a removal unit type!
             }
-            Sleep 250
+            Sleep 350
             send, t/rlow %BadgeNumber% show me disbanding unit, and resuming under %UnitNumber%{enter}
-            Sleep 250
+            Sleep 350
             send, t/joinunit %UnitNumber%{enter}
         } else {
             MsgBox,, ERROR, You must enter in a unit number to use this!
@@ -1391,19 +1384,34 @@ PD1055Megaphone:
     send, t/m Turn off your vehicle, and remain in the vehicle{enter}
 return
 
+; RPs the taking of the license and handing it back
 PDLicense:
-	send, t/melow looks at the license and hands it back to you{enter}
+	send, t/melow looks at the license and hands it back{enter}
 return
 
+; RPs the towing of a vehicle
 TowVehicle:
 	Send, t/melow opens the control panel, pulls down a lever, and lowers the ramp{enter}
 	Sleep, 3000
-	Send, t/melow deploys the winch cables and securely attaches the cables to the front of the vehicle{enter}
+	Send, t/melow deploys the winch cables and securely attaches the cables to the tow hook of the vehicle{enter}
+    sleep, 3000
+    send, t/melow Puts the transmission into neutral{enter}
 	Sleep, 3000
 	Send, t/melow pulls another lever on the control panel and starts the winch{enter}
 	Sleep, 3000
 	Send, t/melow secures the vehicle by its tires to the flatbed and lifts the ramp{enter}
 Return
+
+; RPs the untow deployment of the vehicle
+UnTowVehicle:
+    Send, t/melow opens the control panel, pulls down a lever, and lowers the ramp{enter}
+    Sleep, 3000
+	Send, t/melow unsecures the straps on the vehicles, and checks that the car in neutral{enter}
+	Sleep, 3000
+	Send, t/melow pulls another lever on the control panel and starts the winch, letting the vehicle slowly roll back onto the ground{enter}
+    Sleep, 3000
+    send, t/melow Raises the ramp to the standard position{enter}
+return
 
 ;Interdepartmental radio handlers
 DRadio:
@@ -1484,29 +1492,29 @@ return
 
 ;Scene management handlers
 PDGrabBarriers:
-	send, t/melow grabs the necessary barriers from the trunk of the cruiser, placing them under my arms {enter}
+	send, t/me grabs the necessary barriers from the trunk of the cruiser, placing them under my arms {enter}
 return
 
 PDGatherBarriers:
-	send, t/melow gathers all the blockades one by one and places them under my arms{enter}
+	send, t/me gathers all the blockades one by one and places them under my arms{enter}
 	Sleep 250
 	send, t/RemoveAllBlockades{enter}
 return
 
 PDStoreBarriers:
-	send, t/melow places the barriers in the trunk of the cruiser{enter}
+	send, t/me places the barriers in the trunk of the cruiser{enter}
 return
 
 PDGrabBLS:
-	send, t/melow grabs a BLS kit from the trunk of the cruiser {enter}
+	send, t/me grabs a BLS kit from the trunk of the cruiser {enter}
 return
 
 PDInitialBLS:
 	send, t/anim medic{enter}
 	Sleep 250
-	send, t/melow sets the BLS kit on the groud and begins looking over their injuries{enter}
+	send, t/me sets the BLS kit on the groud and begins looking over their injuries{enter}
 	Sleep 450
-	send, t/dolow what would I see?{enter}
+	send, t/do what would I see?{enter}
 return
 
 PDGrabBodyBag:
@@ -1522,19 +1530,21 @@ PDLoadIntoBodyBag:
 return
 
 ;Prisoner processing and arrest handlers
-
 PDCuff:
 	send, t/melow grabs a pair of cuffs from my duty belt and attempts to put them around their wrists{enter}
+    sleep 500
     send, t/dolow would I be able{enter}
 return
 
 PDUncuff:
 	send, t/melow takes the handcuff key from my duty belt and attempts to uncuff them{enter}
+    sleep 500
     send, t/dolow would I be able{enter}
 return
 
 PDFrisk:
 	send, t/melow puts on a pair of non-latex gloves and attempts to frisk them{enter}
+    sleep 500
     send, t/dolow would I be able{enter}
 return
 
@@ -1571,10 +1581,12 @@ PDReleaseForm:
 return
 
 PDMugshot:
-
+	send, t/melow takes a mugshot of the individual and uploads it to the PD database{enter}
+	Sleep 1200
+	send, t/dolow the upload would be successful{enter}
 return
 
-PDOutsideMugshot:
+PDOnSceneMugshot:
 	send, {F7}
 	Sleep 450
 	send, {F8}
