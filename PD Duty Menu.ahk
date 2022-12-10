@@ -1,11 +1,12 @@
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
+;#Warn  ; Enable warnings to assist with detecting common errors.
 SetKeyDelay, 1
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global LincolnCallsign := "FRANK-20"
+global DefaultCallsign := "FRANK-20"
+global LincolnCallsign := "LINCOLN-20"
 global AdamCallsign := "FRANK-20"
 global SpecialCallsign := "DoNotUse"
 global BadgeNumber := "24410"
@@ -29,7 +30,7 @@ Ins::
     Gui, Destroy
     Gui, Add, Text,, Enter Respond ID:
     Gui, Add, Edit, w300 vRespondId,
-    Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Set GPS
+    Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Check GPS
     Gui, Add, Button, Default x80 gRespondConfirm w80, Ok
     Gui, Show,, Respond ID
     return
@@ -37,8 +38,8 @@ Ins::
     RespondConfirm:
 		Gui,Submit
         if (RespondId!=""){
-            if (RespondType="Set GPS") {
-                send, t/setgps %RespondId%{enter}
+            if (RespondType="Check GPS") {
+                send, t/setcall %RespondId%{enter}
             } else if (RespondType="Respond To Call") {
                 send, t/resp %RespondId%{enter}
             }
@@ -47,7 +48,6 @@ Ins::
         }
     return
 return
-
 
 
 ;self explanitory
@@ -120,6 +120,7 @@ Menu, TrafficStop, Add, View License, PDLicense
 Menu, TrafficStop, Add, Issue Citation, PDIssueCitationHandler
 Menu, TrafficStop, Add, Hand Citation, PDHandCitation
 Menu, TrafficStop, Add, No Driver Citation, PDNoDriverCitation
+Menu, TrafficStop, Add, No Bike Driver Citation, PDNoBikeDriverCitation
 Menu, FullMenuMe, Add, Traffic Stop, :TrafficStop
 
 Menu, FelonyStop, Add, Step 1: Toss keys from ignition, FelonyStop1
@@ -135,6 +136,7 @@ Menu, ArrestMenu, Add, Frisk, PDFrisk
 Menu, ArrestMenu, Add, Frisk for License, PDLicenseFrisk
 Menu, ArrestMenu, Add, Frisk for Keys, PDKeyFrisk
 Menu, ArrestMenu, Add, Frisk For License/Keys, PDKeyLicenseFrisk
+Menu, ArrestMenu, Add, Frisk For License/Keys, PDLicensePhoneFrisk
 Menu, ArrestMenu, Add, Unlock Cuffed Person's Car, PDUnlockCuffedCar
 Menu, ArrestMenu, Add, View Cuffed License, PDLicenseCuff
 Menu, FullMenuMe, Add, Arrest, :ArrestMenu
@@ -175,15 +177,15 @@ Menu, FullMenu, Add, Pursuit Force, LethalPursuit
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Menu, SubMenu0, Add, sitchair3, MenuHandler
+Menu, SubMenu0, Add, finger, MenuHandler
+Menu, SubMenu0, Add, wave, MenuHandler
+Menu, SubMenu0, Add, prone, MenuHandler
 Menu, SubMenu0, Add, spiderman, MenuHandler
 Menu, SubMenu0, Add, crawl, MenuHandler
 Menu, SubMenu0, Add, airplane, MenuHandler
-Menu, SubMenu0, Add, finger, MenuHandler
 Menu, SubMenu0, Add, celebrate, MenuHandler
 Menu, SubMenu0, Add, shakeoff, MenuHandler
-Menu, SubMenu0, Add, prone, MenuHandler
-Menu, SubMenu0, Add, wave, MenuHandler
-Menu, SubMenu0, Add, sitchair4, MenuHandler
 
 Menu, FullMenuAnim, Add, Favorites, :SubMenu0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1164,7 +1166,7 @@ return
 
 ;Handler for animations
 MenuHandler:
-	send, t/anim %A_ThisMenuItem% {enter}
+	send, t/anim %A_ThisMenuItem%{enter}
 return
 
 ;Vehicle spawn handlers
@@ -1200,15 +1202,15 @@ return
 
 ;Unit name handlers
 LincolnUnit:
-	send, t/renameunit %LincolnCallsign% {enter}
+	send, t/renameunit %LincolnCallsign%{enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me renaming unit to %LincolnCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me renaming unit to %LincolnCallsign%{enter}
 return
 
 AdamUnit:
-	send, t/renameunit %AdamCallsign% {enter}
+	send, t/renameunit %AdamCallsign%{enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me renaming unit to %AdamCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me renaming unit to %AdamCallsign%{enter}
 return
 
 ResumeLincolnUnit:
@@ -1216,7 +1218,7 @@ ResumeLincolnUnit:
 	Sleep 500
 	send, t/createunit %LincolnCallsign% {enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me leaving unit and resuming under %LincolnCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me leaving unit and resuming under %LincolnCallsign%{enter}
 return
 
 ; Disbands or Leaves current unit, radios the joining of a new and sets the joinunit
@@ -1269,14 +1271,14 @@ CustomUnit:
 		Sleep 350
 		send, t/joinunit %CallSign% {enter}
 		Sleep 350
-		send, t/rlow %BadgeNumber% show me joining %CallSign% {enter}
+		send, t/rlow %BadgeNumber% show me joining %CallSign%{enter}
 	}
 return
 
 RenameSpecialCallsign:
 	send, t/renameunit %SpecialCallsign% {enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me renaming unit to %SpecialCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me renaming unit to %SpecialCallsign%{enter}
 return
 
 JoinSpecialCallsign:
@@ -1284,7 +1286,7 @@ JoinSpecialCallsign:
 	Sleep 250
 	send, t/joinunit %SpecialCallsign% {enter}
 	Sleep 250
-	send, t/rlow %BadgeNumber% show me disbanding and joining %SpecialCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me disbanding and joining %SpecialCallsign%{enter}
 return
 
 ;Traffic stop handlers
@@ -1295,6 +1297,10 @@ return
 ;Traffic Citation on empty Vehicle
 PDNoDriverCitation:
     send, t/melow Places the citation under the vehicles windscreen wiper{enter}
+return
+
+PDNoBikeDriverCitation:
+    send, t/melow Places the citation under the bikes seat, and secures it with tape{enter}
 return
 
 PDIssueCitationHandler:
@@ -1492,7 +1498,7 @@ return
 
 ;Scene management handlers
 PDGrabBarriers:
-	send, t/me grabs the necessary barriers from the trunk of the cruiser, placing them under my arms {enter}
+	send, t/me grabs the necessary barriers from the trunk of the cruiser, placing them under my arms{enter}
 return
 
 PDGatherBarriers:
@@ -1506,7 +1512,7 @@ PDStoreBarriers:
 return
 
 PDGrabBLS:
-	send, t/me grabs a BLS kit from the trunk of the cruiser {enter}
+	send, t/me grabs a BLS kit from the trunk of the cruiser{enter}
 return
 
 PDInitialBLS:
@@ -1564,6 +1570,12 @@ PDKeyLicenseFrisk:
 	send, t/melow attempts to locate a set of keys and a license{enter}
 	Sleep 500
 	send, t/dolow would I find any?{enter}
+return
+
+PDLicensePhoneFrisk:
+    send, t/melow attempts to locate an ID, and a cellphone{enter}
+    sleep 500
+    send, t/dolow would I find them?{enter}
 return
 
 PDUnlockCuffedCar:
@@ -1643,9 +1655,9 @@ StartWatch:
 	Sleep 750
 	send, t/time {enter}
 	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %LincolnCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me start of watch under %DefaultCallsign% {enter}
 	Sleep 750
-	send, t/createunit %LincolnCallsign% {enter}
+	send, t/createunit %DefaultCallsign% {enter}
     Sleep 750
     send, {alt down}{F9}
     Sleep 250
@@ -1657,23 +1669,23 @@ StartWatchAdam:
 	Sleep 750
 	send, t/melow puts on their duty uniform{enter}
 	Sleep 750
-	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
+	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on{enter}
 	Sleep 750
-	send, t/dolow the light would start blinking green {enter}
+	send, t/dolow the light would start blinking green{enter}
 	Sleep 750
 	send, t/time {enter}
 	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %AdamCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me start of watch under %AdamCallsign%{enter}
 	Sleep 750
-	send, t/createunit %AdamCallsign% {enter}
+	send, t/createunit %AdamCallsign%{enter}
     Sleep 750
-    send, {alt down}{F9}
-    Sleep 250
-    send, {alt up}
+    send, {alt down}{F9 down}
+    Sleep 100
+    send, {alt up}{F9 up}
 return
 
 LookingForAdam:
-    send, t/rlow %LincolnCallSign% looking for a 10-8 unit that would like to Adam, how copy?{enter}
+    send, t/rlow %DefaultCallsign% looking for a 10-8 unit that would like to Adam, how copy?{enter}
 return
 
 EndWatch:
@@ -1686,7 +1698,7 @@ return
 
 ;Duty clothing handlers
 DutyClothes:
-	send, t/fl {enter}
+	send, t/fl{enter}
 	Sleep 350
 	send, {enter}
 	Sleep 350
