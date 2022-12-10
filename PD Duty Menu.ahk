@@ -79,48 +79,13 @@ Menu, FullMenu, Add, Start/End Watch, :SubMenu24
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;Menu, SubMenu21, Add, Join Another Unit, JoinOtherUnit
-Menu, SubMenu21, Add, Rename to %LincolnCallsign%, LincolnUnit
-Menu, SubMenu21, Add, Rename to %AdamCallsign%, AdamUnit
-;Menu, SubMenu21, Add, Rename to %SpecialCallsign%, RenameSpecialCallsign
-;Menu, SubMenu21, Add, Join %SpecialCallsign%, JoinSpecialCallsign
-Menu, SubMenu21, Add, Resume Lincoln, ResumeLincolnUnit
-Menu, SubMenu21, Add, Custom, JoinOtherUnit
-Menu, FullMenu, Add, Change Unit, :SubMenu21
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-Menu, SubMenu27, Add, Default Clothing, DutyClothes
-Menu, SubMenu27, Add, Copilot Clothing, DutyCopilotClothes
-Menu, SubMenu27, Add, Rain Clothing, DutyRainClothes
-Menu, Submenu27, Add, Winter Clothing, DutyWinterClothes
-
-Menu, SubMenu27.1, Add, Fire Extinguisher, DutyFireExtinguisher
-Menu, SubMenu27.1, Add, Default Weapons, DutyWeapons
-Menu, SubMenu27, Add, Weapons, :SubMenu27.1
-
-Menu, FullMenu, Add, Duty Clothing, :SubMenu27
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-Menu, SubMenu20, Add, Scout, SpawnScout
-Menu, SubMenu20, Add, Interceptor, SpawnInterceptor
-Menu, SubMenu20, Add, Stanier, SpawnCrownVic
-Menu, SubMenu20, Add, Buffalo, SpawnBuffalo
-Menu, SubMenu20, Add, Transport Van, SpawnVan
-Menu, SubMenu20, Add, Flatbed, SpawnFlatbed
-Menu, SubMenu20, Add, Park Cruiser, ParkSpawn
-
-Menu, FullMenu, Add, Police Vehicles, :SubMenu20
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 Menu, TrafficStop, Add, Megaphone Initial Stop, PD1055Megaphone
 Menu, TrafficStop, Add, View License, PDLicense
-Menu, TrafficStop, Add, Issue Citation, PDIssueCitationHandler
-Menu, TrafficStop, Add, Hand Citation, PDHandCitation
-Menu, TrafficStop, Add, No Driver Citation, PDNoDriverCitation
-Menu, TrafficStop, Add, No Bike Driver Citation, PDNoBikeDriverCitation
+Menu, TrafficStop, Add, Citation: Issue, PDIssueCitationHandler
+Menu, TrafficStop, Add, Citation: Hand , PDHandCitation
+Menu, TrafficStop, Add, Citation: No Driver , PDNoDriverCitation
+Menu, TrafficStop, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
+Menu, TrafficStop, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
 Menu, FullMenuMe, Add, Traffic Stop, :TrafficStop
 
 Menu, FelonyStop, Add, Step 1: Toss keys from ignition, FelonyStop1
@@ -135,8 +100,9 @@ Menu, ArrestMenu, Add, Uncuff, PDUncuff
 Menu, ArrestMenu, Add, Frisk, PDFrisk
 Menu, ArrestMenu, Add, Frisk for License, PDLicenseFrisk
 Menu, ArrestMenu, Add, Frisk for Keys, PDKeyFrisk
+Menu, ArrestMenu, Add, Frisk for Phone, PDPhoneFrisk
 Menu, ArrestMenu, Add, Frisk For License/Keys, PDKeyLicenseFrisk
-Menu, ArrestMenu, Add, Frisk For License/Keys, PDLicensePhoneFrisk
+Menu, ArrestMenu, Add, Frisk For License/Phone, PDLicensePhoneFrisk
 Menu, ArrestMenu, Add, Unlock Cuffed Person's Car, PDUnlockCuffedCar
 Menu, ArrestMenu, Add, View Cuffed License, PDLicenseCuff
 Menu, FullMenuMe, Add, Arrest, :ArrestMenu
@@ -164,6 +130,29 @@ Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :FullMenuMe
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Menu, SubMenu20, Add, Scout, SpawnScout
+Menu, SubMenu20, Add, Interceptor, SpawnInterceptor
+Menu, SubMenu20, Add, Stanier, SpawnCrownVic
+Menu, SubMenu20, Add, Buffalo, SpawnBuffalo
+Menu, SubMenu20, Add, Transport Van, SpawnVan
+Menu, SubMenu20, Add, Flatbed, SpawnFlatbed
+Menu, SubMenu20, Add, Park Cruiser, ParkSpawn
+
+Menu, FullMenu, Add, Police Vehicles, :SubMenu20
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;Menu, SubMenu21, Add, Join Another Unit, JoinOtherUnit
+Menu, SubMenu21, Add, Rename to %LincolnCallsign%, LincolnUnit
+Menu, SubMenu21, Add, Rename to %AdamCallsign%, AdamUnit
+;Menu, SubMenu21, Add, Rename to %SpecialCallsign%, RenameSpecialCallsign
+;Menu, SubMenu21, Add, Join %SpecialCallsign%, JoinSpecialCallsign
+Menu, SubMenu21, Add, Resume Lincoln, ResumeLincolnUnit
+Menu, SubMenu21, Add, Custom, JoinOtherUnit
+Menu, FullMenu, Add, Change Unit, :SubMenu21
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 Menu, DRadioMenu, Add, PD to DOC, DRadioPDtoDOC
 Menu, DRadioMenu, Add, PD to MD, DRadioPDtoMD
 Menu, DRadioMenu, Add, 10-15 to DOC, DRadio
@@ -174,6 +163,19 @@ Menu, FullMenu, Add, Departmental Radio, :DRadioMenu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, FullMenu, Add, Pursuit Force, LethalPursuit
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Menu, SubMenu27, Add, Default Clothing, DutyClothes
+Menu, SubMenu27, Add, Copilot Clothing, DutyCopilotClothes
+Menu, SubMenu27, Add, Rain Clothing, DutyRainClothes
+Menu, Submenu27, Add, Winter Clothing, DutyWinterClothes
+
+Menu, SubMenu27.1, Add, Fire Extinguisher, DutyFireExtinguisher
+Menu, SubMenu27.1, Add, Default Weapons, DutyWeapons
+Menu, SubMenu27, Add, Weapons, :SubMenu27.1
+
+Menu, FullMenu, Add, Duty Clothing, :SubMenu27
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1303,6 +1305,54 @@ PDNoBikeDriverCitation:
     send, t/melow Places the citation under the bikes seat, and secures it with tape{enter}
 return
 
+PDIssueSuspensionDemerit:
+    Gui, Destroy
+	Gui, Add, Text,, Enter Player ID:
+	Gui, Add, Edit, w300 vPlayerID
+	Gui, Add, Text,, Demerit?:
+    Gui, Add, DropdownList, w300 vDemeritSuspend, Select...||No|Yes
+	Gui, Add, Text,, Type of License:
+	Gui, Add, DropdownList, w300 vLicenseType, Select...||Driver|Driver and Trucker
+	Gui, Add, Button, Default x80 gSuspensionOk w80, Ok
+    Gui, Add, Button, Default x+0 gSuspensionCancel w80, Cancel
+	Gui, Show,, Issue Citation RPly
+	return
+
+    SuspensionOk:
+        Gui,Submit
+
+        if (PlayerID="") {
+            MsgBox,, ERROR, You must enter a player ID in order to issue a suspension!
+        }
+        else if (LicenseType!="Select..." and DemeritSuspend!="Select...") {
+            if (DemeritSuspend="Yes") {
+                send, t/warndriver %PlayerID%{enter}
+                sleep 550
+                send, t/melow adds a demerit to the individual's driver's license{enter}
+                sleep 550
+            }
+
+            send, t/suspend %PlayerID% driver 1{enter}
+            sleep 550
+            send, t/melow issues a 24 hour suspension on the individual's driver's license{enter}
+
+            if (LicenseType="Driver and Trucker") {
+                send, t/suspend %PlayerID% trucker 1{enter}
+                sleep 550
+                send, t/melow issues a 24 hour suspension on the individual's trucker's license{enter}
+                sleep 550
+            }
+        } else {
+            MsgBox,, ERROR, You must select a License Type and Demerit Suspend Type!
+        }
+    return
+
+    SuspensionCancel:
+        Gui, Destroy
+    return
+
+return
+
 PDIssueCitationHandler:
 	Gui, Destroy
 	Gui, Add, Text,, Enter Player ID:
@@ -1564,6 +1614,12 @@ PDKeyFrisk:
 	send, t/melow attempts to locate a set of keys{enter}
 	Sleep 500
 	send, t/dolow would I find any?{enter}
+return
+
+PDPhoneFrisk:
+    send, t/melow attempts to locate the individuals phone{enter}
+    sleep 500
+    send, t/dolow would I find it?{enter}
 return
 
 PDKeyLicenseFrisk:
