@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;These are the global variables that you will need to change.  All should be self explanitory.
 global DefaultCallsign := "FRANK-20"
 global LincolnCallsign := "LINCOLN-20"
-global AdamCallsign := "FRANK-20"
+global AdamCallsign := "ADAM-20"
 global SpecialCallsign := "DoNotUse"
 global BadgeNumber := "24410"
 
@@ -1750,6 +1750,13 @@ EndWatch:
 	send, t/disbandunit{enter}
 	Sleep 750
 	send, t/leaveunit{enter}
+    send, t/dolow the light of the body cam would be blinking red{enter}
+    sleep 500
+    send, t/melow takes off the body cam, and secures it back in the locker{enter}
+    sleep 500
+    send, t/melow takes of his duty uniform and places it in the dirty clothes shoot{enter}
+    sleep 500
+    send, t/melow takes his civilian clothing and puts them on{enter}
 return
 
 ;Duty clothing handlers
