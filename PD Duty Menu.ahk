@@ -5,9 +5,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global DefaultCallsign := "FRANK-20"
-global LincolnCallsign := "LINCOLN-20"
-global AdamCallsign := "ADAM-20"
+global LincolnCallsign := "21-L-15"
+global AdamCallsign := "21-A-15"
 global SpecialCallsign := "DoNotUse"
 global BadgeNumber := "24410"
 
@@ -73,7 +72,6 @@ F3::
 
 Menu, WatchMenu, Add, Start Watch, StartWatch
 Menu, WatchMenu, Add, Start Adam Watch, StartWatchAdam
-Menu, WatchMenu, Add, Looking for Adam, LookingForAdam
 Menu, WatchMenu, Add, End Watch, EndWatch
 Menu, FullMenu, Add, Start/End Watch, :WatchMenu
 
@@ -123,6 +121,10 @@ Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
 Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
 Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
 
+Menu, DocMenu, Add, Open Gate, DOCOpenGate
+Menu, DocMenu, Add, Close Gate, DOCCloseGate
+Menu, RPMenu, Add, DOC Specific, :DocMenu
+
 Menu, RPMenu, Add, Tow Vehicle, TowVehicle
 Menu, RPMenu, Add, Untow Vehicle, UnTowVehicle
 
@@ -132,7 +134,7 @@ Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :RPMenu
 
 Menu, VehicleMenu, Add, Scout, SpawnScout
 Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
-Menu, VehicleMenu, Add, Stanier, SpawnCrownVic
+Menu, VehicleMenu, Add, Alamo, SpawnAlamo
 Menu, VehicleMenu, Add, Buffalo, SpawnBuffalo
 Menu, VehicleMenu, Add, Transport Van, SpawnVan
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
@@ -1172,16 +1174,16 @@ MenuHandler:
 return
 
 ;Vehicle spawn handlers
-SpawnCrownVic:
-	send, t/fspawn police 5{enter}
+SpawnAlamo:
+	send, t/fspawn policealamo{enter}
 return
 
 SpawnBuffalo:
-	send, t/fspawn police2 5{enter}
+	send, t/fspawn police2{enter}
 return
 
 SpawnInterceptor:
-	send, t/fspawn police3 5{enter}
+	send, t/fspawn police3{enter}
 return
 
 SpawnScout:
@@ -1198,7 +1200,7 @@ return
 
 ParkSpawn:
 	send, t/delcruiser{enter}
-	sleep 450
+	sleep 500
 	send, t {up}{enter}
 return
 
@@ -1267,13 +1269,13 @@ CustomUnit:
 	} else {
 		if WinExist("ahk_exe ragemp_v.exe") {
 			WinActivate
-			sleep 450
+			sleep 500
 			send, t/disbandunit {enter}
-			Sleep 350
+			Sleep 500
 			send, t/leaveunit {enter}
-			Sleep 350
+			Sleep 500
 			send, t/joinunit %CallSign% {enter}
-			Sleep 350
+			Sleep 500
 			send, t/rlow %BadgeNumber% show me joining %CallSign% {enter}
 		} else {
 			MsgBox, , ERROR, Rage is not open!
@@ -1394,7 +1396,7 @@ PDIssueCitationHandler:
     				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
     				sleep 350
     				send, t/warndriver %PlayerID%{enter}
-    				sleep 450
+    				sleep 500
     				send, t/melow adds a demerit to the individual's driver's license{enter}
     				sleep 350
     				send, t/melow prints out the citation and grabs it from the printer{enter}
@@ -1407,14 +1409,14 @@ PDIssueCitationHandler:
     				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
     				sleep 350
     				send, t/warndriver %PlayerID%{enter}
-    				sleep 450
+    				sleep 500
     				send, t/melow adds a demerit to the individual's driver's license{enter}
-    				sleep 450
+    				sleep 500
     				if (LicenseType="Driver"){
     					send, t/suspend %PlayerID% driver 1{enter}
-    					sleep 450
+    					sleep 500
     					send, t/melow issues a 24 hour suspension on the individual's driver's license{enter}
-    					sleep 350
+    					sleep 500
     					send, t/melow prints out the citation and grabs it from the printer{enter}
     				} else if (LicenseType="Driver and Trucker"){
     					send, t/suspend %PlayerID% driver 1{enter}
@@ -1422,7 +1424,7 @@ PDIssueCitationHandler:
     					send, t/suspend %PlayerID% trucker 1{enter}
     					sleep 550
     					send, t/melow issues a 24 hour suspension on both the individual's driver's and trucker's license{enter}
-    					sleep 350
+    					sleep 500
     					send, t/melow prints out the citation and grabs it from the printer{enter}
     				}
     			} else if (PlayerID="") {
@@ -1583,7 +1585,7 @@ PDInitialBLS:
 	send, t/anim medic{enter}
 	Sleep 250
 	send, t/me sets the BLS kit on the groud and begins looking over their injuries{enter}
-	Sleep 450
+	Sleep 500
 	send, t/do what would I see?{enter}
 return
 
@@ -1619,15 +1621,15 @@ PDFrisk:
 return
 
 PDLicenseFrisk:
-	send, t/melow attempts to locate an ID{enter}
+	send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a license{enter}
 	Sleep 500
-	send, t/dolow would I find one?{enter}
+	send, t/dolow would I be able to frisk, and would I find a license?{enter}
 return
 
 PDKeyFrisk:
 	send, t/melow attempts to locate a set of keys{enter}
 	Sleep 500
-	send, t/dolow would I find any?{enter}
+	send, t/dolow would I find them?{enter}
 return
 
 PDPhoneFrisk:
@@ -1637,15 +1639,15 @@ PDPhoneFrisk:
 return
 
 PDKeyLicenseFrisk:
-	send, t/melow attempts to locate a set of keys and a license{enter}
+	send, send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a set of keys and a license{enter}
 	Sleep 500
-	send, t/dolow would I find any?{enter}
+	send, t/dolow would I be able, and would I find keys and/or license?{enter}
 return
 
 PDLicensePhoneFrisk:
-    send, t/melow attempts to locate an ID, and a cellphone{enter}
+    send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a license, and a cellphone{enter}
     sleep 500
-    send, t/dolow would I find them?{enter}
+    send, t/dolow would I be able, and would I find keys and/or a cellphone?{enter}
 return
 
 PDUnlockCuffedCar:
@@ -1670,17 +1672,17 @@ return
 
 PDOnSceneMugshot:
 	send, {F7}
-	Sleep 450
+	Sleep 500
 	send, {F8}
 	Sleep 350
 	send, {F7}
-	Sleep 450
+	Sleep 500
 	send, t/record{enter}
 	Sleep 250
 	send, t/melow takes a mugshot of the individual and uploads it to the PD database{enter}
 	Sleep 1200
 	send, t/dolow the upload would be successful{enter}
-	Sleep 450
+	Sleep 500
 	send, t/record{enter}
 return
 
@@ -1688,7 +1690,7 @@ PDFingerprints:
 	send, t/collectprints
 	KeyWait, Enter, d
 	{
-		Sleep 450
+		Sleep 500
 		send, t/melow takes each of the fingers from their left hand and slowly rolls them over the scanner{enter}
 		Sleep 2250
 		send, t/melow checks the clarity of the fingerprints on the MDC before submitting{enter}
@@ -1713,6 +1715,18 @@ PDFingerprints:
 	}
 return
 
+DOCOpenGate:
+    send, t/melow Punches in the code on the gate to open it{enter}
+    sleep 250
+    send, t/gate{enter}
+return
+
+DOCCloseGate:
+    send, t/melow Clicks a button on the cruiser to close the gate{enter}
+    sleep 250
+    send, t/gate{enter}
+return
+
 ;Start and end watch handlers
 StartWatch:
 	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
@@ -1725,9 +1739,9 @@ StartWatch:
 	Sleep 750
 	send, t/time {enter}
 	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %DefaultCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me start of watch under %LincolnCallsign% {enter}
 	Sleep 750
-	send, t/createunit %DefaultCallsign% {enter}
+	send, t/createunit %LincolnCallsign% {enter}
     Sleep 750
     send, {alt down}{F9}
     Sleep 250
@@ -1754,16 +1768,13 @@ StartWatchAdam:
     send, {alt up}{F9 up}
 return
 
-LookingForAdam:
-    send, t/rlow %DefaultCallsign% looking for a 10-8 unit that would like to Adam, how copy?{enter}
-return
-
 EndWatch:
 	send, t/rlow %BadgeNumber% disbanding unit and ending watch{enter}
 	Sleep 750
 	send, t/disbandunit{enter}
 	Sleep 750
 	send, t/leaveunit{enter}
+    sleep 500
     send, t/dolow the light of the body cam would be blinking red{enter}
     sleep 500
     send, t/melow takes off the body cam, and secures it back in the locker{enter}
