@@ -10,14 +10,13 @@ global AdamCallsign := "21-A-15"
 global SpecialCallsign := "DoNotUse"
 global BadgeNumber := "24410"
 
-;opens the mini MDC.  If your ctrl button gets stuck or you cannot press the windows key, remove this.  Causes some issues on some keyboards.  No known fix for now.
+; opens the mini MDC. If your ctrl button gets stuck or you cannot press the windows key, remove this.
+; Causes some issues on some keyboards. No known fix for now.
 NumpadAdd::
 	sleep, 150
-	send, {LCtrl down}
-	send, {M down}
+	send, {LCtrl down}{M down}
 	sleep, 50
-	send, {LCtrl Up}
-	send, {M up}
+	send, {LCtrl Up}{M up}
 	sleep 150
 	send, {F7}
 	sleep 50
