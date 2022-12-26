@@ -184,7 +184,7 @@ Menu, SubMenu0, Add, sitchair3, MenuHandler
 Menu, SubMenu0, Add, finger, MenuHandler
 Menu, SubMenu0, Add, wave, MenuHandler
 Menu, SubMenu0, Add, prone, MenuHandler
-Menu, SubMenu0, Add, spiderman, MenuHandler
+Menu, SubMenu0, Add, type, MenuHandler
 Menu, SubMenu0, Add, crawl, MenuHandler
 Menu, SubMenu0, Add, airplane, MenuHandler
 Menu, SubMenu0, Add, celebrate, MenuHandler
@@ -1729,21 +1729,23 @@ return
 ;Start and end watch handlers
 StartWatch:
 	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
-	Sleep 750
+	Sleep 500
 	send, t/melow puts on their duty uniform{enter}
-	Sleep 750
+	Sleep 500
 	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
-	Sleep 750
+	Sleep 500
 	send, t/dolow the light would start blinking green {enter}
-	Sleep 750
+	Sleep 500
 	send, t/time {enter}
 	Sleep 750
 	send, t/rlow %BadgeNumber% show me start of watch under %LincolnCallsign% {enter}
 	Sleep 750
 	send, t/createunit %LincolnCallsign% {enter}
-    Sleep 750
+    sleep 500
+    send, {F8}
+    Sleep 500
     send, {alt down}{F9}
-    Sleep 250
+    Sleep 500
     send, {alt up}
 return
 
