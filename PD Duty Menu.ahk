@@ -5,8 +5,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global LincolnCallsign := "21-L-15"
-global AdamCallsign := "21-A-15"
+global LincolnCallsign := "22-T-12"
+global AdamCallsign := "22-T-12"
 global SpecialCallsign := "DoNotUse"
 global BadgeNumber := "24410"
 
@@ -83,6 +83,7 @@ Menu, TrafficStopMenu, Add, Citation: Hand , PDHandCitation
 Menu, TrafficStopMenu, Add, Citation: No Driver , PDNoDriverCitation
 Menu, TrafficStopMenu, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
 Menu, TrafficStopMenu, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
+Menu, TrafficStopMenu, Add, Administer Breathalyzer, PDIssueBreathalyzer
 Menu, RPMenu, Add, Traffic Stop, :TrafficStopMenu
 
 Menu, FelonyStopMenu, Add, Step 1: Toss keys from ignition, FelonyStop1
@@ -1174,19 +1175,19 @@ return
 
 ;Vehicle spawn handlers
 SpawnAlamo:
-	send, t/fspawn policealamo{enter}
+	send, t/fspawn policealamo 4{enter}
 return
 
 SpawnBuffalo:
-	send, t/fspawn police2{enter}
+	send, t/fspawn police2 4{enter}
 return
 
 SpawnInterceptor:
-	send, t/fspawn police3{enter}
+	send, t/fspawn police3 4{enter}
 return
 
 SpawnScout:
-	send, t/fspawn policescout{enter}
+	send, t/fspawn policescout 4{enter}
 return
 
 SpawnVan:
@@ -1361,6 +1362,28 @@ PDIssueSuspensionDemerit:
         Gui, Destroy
     return
 
+return
+
+PDIssueBreathalyzer:
+    send, t/melow takes out the breathalyzer from the case{enter}
+    sleep 500
+    send, t/melow turns on the breathalyzer, and looks at the screen{enter}
+    sleep 500
+    send, t/dolow the screen would flash, and the numbers would read READY and BAC 0.0{enter}
+    sleep 500
+    send, t/melow removes a sealed mouthpeice from the case, unwraps the piece and puts it onto the machine{enter}
+    sleep 500
+    send, t/melow holds the breathalyzer up to the individual's mouth{enter}
+    sleep 500
+    send, t/dolow would they blow into the breathalyzer?{enter}
+    sleep 1000
+    send, t/breathanalyse{space}
+    KeyWait, Enter, d
+    {
+        send, t/dolow the machines screen would say READING{enter}
+        sleep 6000
+        send, t/dolow the machine would beep 3 times, and the BAC would read{space}
+    }
 return
 
 PDIssueCitationHandler:
@@ -1646,7 +1669,7 @@ return
 PDLicensePhoneFrisk:
     send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a license, and a cellphone{enter}
     sleep 500
-    send, t/dolow would I be able, and would I find keys and/or a cellphone?{enter}
+    send, t/dolow would I be able, and would I find a license and/or a cellphone?{enter}
 return
 
 PDUnlockCuffedCar:
