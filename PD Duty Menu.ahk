@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;These are the global variables that you will need to change.  All should be self explanitory.
 global LincolnCallsign := "22-T-12"
 global AdamCallsign := "22-T-12"
-global SpecialCallsign := "DoNotUse"
+global SpecialCallsign := "22-M-12"
 global BadgeNumber := "24410"
 
 ; opens the mini MDC. If your ctrl button gets stuck or you cannot press the windows key, remove this.
@@ -69,6 +69,10 @@ F3::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Menu, FullMenu, Add, Park Cruiser, ParkCruiser
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 Menu, WatchMenu, Add, Start Watch, StartWatch
 Menu, WatchMenu, Add, Start Adam Watch, StartWatchAdam
 Menu, WatchMenu, Add, End Watch, EndWatch
@@ -96,11 +100,11 @@ Menu, RPMenu, Add, Felony Stop, :FelonyStopMenu
 Menu, ArrestMenu, Add, Cuff, PDCuff
 Menu, ArrestMenu, Add, Uncuff, PDUncuff
 Menu, ArrestMenu, Add, Frisk, PDFrisk
-Menu, ArrestMenu, Add, Frisk for License, PDLicenseFrisk
-Menu, ArrestMenu, Add, Frisk for Keys, PDKeyFrisk
-Menu, ArrestMenu, Add, Frisk for Phone, PDPhoneFrisk
-Menu, ArrestMenu, Add, Frisk For License/Keys, PDKeyLicenseFrisk
-Menu, ArrestMenu, Add, Frisk For License/Phone, PDLicensePhoneFrisk
+Menu, ArrestMenu, Add, Frisk: Just License, PDLicenseFrisk
+Menu, ArrestMenu, Add, Frisk: Only Keys, PDKeyFrisk
+Menu, ArrestMenu, Add, Frisk: Only Phone, PDPhoneFrisk
+Menu, ArrestMenu, Add, Frisk: Also License/Keys, PDKeyLicenseFrisk
+Menu, ArrestMenu, Add, Frisk: Also License/Phone, PDLicensePhoneFrisk
 Menu, ArrestMenu, Add, Unlock Cuffed Person's Car, PDUnlockCuffedCar
 Menu, ArrestMenu, Add, View Cuffed License, PDLicenseCuff
 Menu, RPMenu, Add, Arrest, :ArrestMenu
@@ -115,18 +119,19 @@ Menu, SceneMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
 Menu, RPMenu, Add, Scene Management, :SceneMenu
 
 Menu, InmateProcessingMenu, Add, Uncuff, PDUncuff
-Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
 Menu, InmateProcessingMenu, Add, Mugshot, PDMugshot
 Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
 Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
+Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
 Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
 
 Menu, DocMenu, Add, Open Gate, DOCOpenGate
 Menu, DocMenu, Add, Close Gate, DOCCloseGate
 Menu, RPMenu, Add, DOC Specific, :DocMenu
 
-Menu, RPMenu, Add, Tow Vehicle, TowVehicle
-Menu, RPMenu, Add, Untow Vehicle, UnTowVehicle
+Menu, TowMenu, Add, Tow Vehicle, TowVehicle
+Menu, TowMenu, Add, Untow Vehicle, UnTowVehicle
+Menu, RPMenu, Add, Towing, :TowMenu
 
 Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :RPMenu
 
@@ -134,11 +139,11 @@ Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :RPMenu
 
 Menu, VehicleMenu, Add, Scout, SpawnScout
 Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
+Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
+Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
 Menu, VehicleMenu, Add, Alamo, SpawnAlamo
 Menu, VehicleMenu, Add, Buffalo, SpawnBuffalo
 Menu, VehicleMenu, Add, Transport Van, SpawnVan
-Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
-Menu, VehicleMenu, Add, Park Cruiser, ParkSpawn
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 
@@ -147,7 +152,7 @@ Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 ;Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
 Menu, UnitMenu, Add, Rename to %LincolnCallsign%, LincolnUnit
 Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
-;Menu, UnitMenu, Add, Rename to %SpecialCallsign%, RenameSpecialCallsign
+Menu, UnitMenu, Add, Rename to %SpecialCallsign%, RenameSpecialCallsign
 ;Menu, UnitMenu, Add, Join %SpecialCallsign%, JoinSpecialCallsign
 Menu, UnitMenu, Add, Resume Lincoln, ResumeLincolnUnit
 Menu, UnitMenu, Add, Custom, JoinOtherUnit
@@ -1182,6 +1187,10 @@ SpawnBuffalo:
 	send, t/fspawn police2 4{enter}
 return
 
+SpawnMotorcycle:
+    send, t/fspawn policeb{enter}
+return
+
 SpawnInterceptor:
 	send, t/fspawn police3 4{enter}
 return
@@ -1198,7 +1207,7 @@ SpawnFlatbed:
 	send, t/fspawn flatbed{enter}
 return
 
-ParkSpawn:
+ParkCruiser:
 	send, t/delcruiser{enter}
 	sleep 500
 	send, t {up}{enter}
@@ -1378,6 +1387,7 @@ PDIssueBreathalyzer:
     send, t/dolow would they blow into the breathalyzer?{enter}
     sleep 1000
     send, t/breathanalyse{space}
+    sleep 500
     KeyWait, Enter, d
     {
         send, t/dolow the machines screen would say READING{enter}
