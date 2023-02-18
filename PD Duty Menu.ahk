@@ -81,6 +81,8 @@ Menu, FullMenu, Add, Uncuff, PDUncuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, WatchMenu, Add, Start Watch, StartWatch
+Menu, WatchMenu, Add, Start Watch %TomCallsign%, StartWatchTom
+Menu, WatchMenu, Add, Start Watch %MaryCallsign%, StartWatchMary
 Menu, WatchMenu, Add, End Watch, EndWatch
 Menu, FullMenu, Add, Start/End Watch, :WatchMenu
 
@@ -1656,6 +1658,46 @@ StartWatch:
 	send, t/rlow %BadgeNumber% show me start of watch under %LincolnCallsign% {enter}
 	Sleep 750
 	send, t/createunit %LincolnCallsign% {enter}
+    sleep 500
+    send, {F8}
+    sleep 500
+return
+
+;Start and end watch handlers
+StartWatchTom:
+	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
+	Sleep 500
+	send, t/melow puts on their duty uniform{enter}
+	Sleep 500
+	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
+	Sleep 500
+	send, t/dolow the light would start blinking green {enter}
+	Sleep 500
+	send, t/time {enter}
+	Sleep 750
+	send, t/rlow %BadgeNumber% show me start of watch under %TomCallsign% {enter}
+	Sleep 750
+	send, t/createunit %TomCallsign% {enter}
+    sleep 500
+    send, {F8}
+    sleep 500
+return
+
+;Start and end watch handlers
+StartWatchMary:
+	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
+	Sleep 500
+	send, t/melow puts on their duty uniform{enter}
+	Sleep 500
+	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
+	Sleep 500
+	send, t/dolow the light would start blinking green {enter}
+	Sleep 500
+	send, t/time {enter}
+	Sleep 750
+	send, t/rlow %BadgeNumber% show me start of watch under %MaryCallsign% {enter}
+	Sleep 750
+	send, t/createunit %MaryCallsign% {enter}
     sleep 500
     send, {F8}
     sleep 500
