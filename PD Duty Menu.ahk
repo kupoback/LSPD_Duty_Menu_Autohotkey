@@ -5,9 +5,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global LincolnCallsign := "22-T-12"
-global AdamCallsign := "22-T-12"
-global SpecialCallsign := "22-M-12"
+global LincolnCallsign := "22-L-12"
+global AdamCallsign := "22-A-12"
+global TomCallsign := "TOM-12"
+global MaryCallsign := "MARY-12"
 global BadgeNumber := "24410"
 
 ; opens the mini MDC. If your ctrl button gets stuck or you cannot press the windows key, remove this.
@@ -30,6 +31,7 @@ Ins::
     Gui, Add, Edit, w300 vRespondId,
     Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Check GPS
     Gui, Add, Button, Default x80 gRespondConfirm w80, Ok
+    ;Gui, Add, Button, Default x+0 gRespondCancel w80, Cancel
     Gui, Show,, Respond ID
     return
 
@@ -58,8 +60,8 @@ F10::
 	send, t/setcall -1{enter}
 return
 
-;sets mouse button 5 to send p so you can use the phone button for TAC
-;XButton2::p
+;sets mouse button 4 to send p so you can use the phone button for TAC
+;XButton1::p
 
 ;kill switch
 F12::ExitApp
@@ -73,21 +75,22 @@ Menu, FullMenu, Add, Park Cruiser, ParkCruiser
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Menu, FullMenu, Add, Cuff, PDCuff
+Menu, FullMenu, Add, Uncuff, PDUncuff
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 Menu, WatchMenu, Add, Start Watch, StartWatch
-Menu, WatchMenu, Add, Start Adam Watch, StartWatchAdam
 Menu, WatchMenu, Add, End Watch, EndWatch
 Menu, FullMenu, Add, Start/End Watch, :WatchMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, TrafficStopMenu, Add, Megaphone Initial Stop, PD1055Megaphone
-Menu, TrafficStopMenu, Add, View License, PDLicense
 Menu, TrafficStopMenu, Add, Citation: Issue, PDIssueCitationHandler
 Menu, TrafficStopMenu, Add, Citation: Hand , PDHandCitation
 Menu, TrafficStopMenu, Add, Citation: No Driver , PDNoDriverCitation
 Menu, TrafficStopMenu, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
 Menu, TrafficStopMenu, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
-Menu, TrafficStopMenu, Add, Administer Breathalyzer, PDIssueBreathalyzer
 Menu, RPMenu, Add, Traffic Stop, :TrafficStopMenu
 
 Menu, FelonyStopMenu, Add, Step 1: Toss keys from ignition, FelonyStop1
@@ -97,53 +100,42 @@ Menu, FelonyStopMenu, Add, Step 4: Full 360, FelonyStop4
 Menu, FelonyStopMenu, Add, Step 5: Walk backwards, FelonyStop5
 Menu, RPMenu, Add, Felony Stop, :FelonyStopMenu
 
-Menu, ArrestMenu, Add, Cuff, PDCuff
-Menu, ArrestMenu, Add, Uncuff, PDUncuff
-Menu, ArrestMenu, Add, Frisk, PDFrisk
-Menu, ArrestMenu, Add, Frisk: Just License, PDLicenseFrisk
-Menu, ArrestMenu, Add, Frisk: Only Keys, PDKeyFrisk
-Menu, ArrestMenu, Add, Frisk: Only Phone, PDPhoneFrisk
-Menu, ArrestMenu, Add, Frisk: Also License/Keys, PDKeyLicenseFrisk
-Menu, ArrestMenu, Add, Frisk: Also License/Phone, PDLicensePhoneFrisk
-Menu, ArrestMenu, Add, Unlock Cuffed Person's Car, PDUnlockCuffedCar
-Menu, ArrestMenu, Add, View Cuffed License, PDLicenseCuff
-Menu, RPMenu, Add, Arrest, :ArrestMenu
-
-Menu, SceneMenu, Add, Grab Barriers, PDGrabBarriers
-Menu, SceneMenu, Add, Gather All Barriers, PDGatherBarriers
-Menu, SceneMenu, Add, Store Barriers, PDStoreBarriers
-Menu, SceneMenu, Add, Grab BLS Kit, PDGrabBLS
-Menu, SceneMenu, Add, Initial BLS, PDInitialBLS
-Menu, SceneMenu, Add, Grab Body Bag, PDGrabBodyBag
-Menu, SceneMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
-Menu, RPMenu, Add, Scene Management, :SceneMenu
-
-Menu, InmateProcessingMenu, Add, Uncuff, PDUncuff
 Menu, InmateProcessingMenu, Add, Mugshot, PDMugshot
 Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
 Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
 Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
 Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
 
-Menu, DocMenu, Add, Open Gate, DOCOpenGate
-Menu, DocMenu, Add, Close Gate, DOCCloseGate
-Menu, RPMenu, Add, DOC Specific, :DocMenu
-
 Menu, TowMenu, Add, Tow Vehicle, TowVehicle
 Menu, TowMenu, Add, Untow Vehicle, UnTowVehicle
 Menu, RPMenu, Add, Towing, :TowMenu
 
-Menu, FullMenu, Add, Traffic Stop/Arrest Procedure, :RPMenu
+Menu, FullMenu, Add, Traffic Stop/Processing Procedure, :RPMenu
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
+Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
+Menu, LifeSupportMenu, Add, Grab Body Bag, PDGrabBodyBag
+Menu, LifeSupportMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
+Menu, FullMenu, Add, Life Support, :LifeSupportMenu
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Menu, SceneMenu, Add, Grab Barriers, PDGrabBarriers
+Menu, SceneMenu, Add, Gather All Barriers, PDGatherBarriers
+Menu, SceneMenu, Add, Store Barriers, PDStoreBarriers
+Menu, FullMenu, Add, Scene Management, :SceneMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, VehicleMenu, Add, Scout, SpawnScout
+Menu, VehicleMenu, Add, Scout - TED, SpawnScoutTED
 Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
 Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
 Menu, VehicleMenu, Add, Alamo, SpawnAlamo
-Menu, VehicleMenu, Add, Buffalo, SpawnBuffalo
-Menu, VehicleMenu, Add, Transport Van, SpawnVan
+Menu, VehicleMenu, Add, Alamo - TED, SpawnAlamoTED
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 
@@ -152,8 +144,8 @@ Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 ;Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
 Menu, UnitMenu, Add, Rename to %LincolnCallsign%, LincolnUnit
 Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
-Menu, UnitMenu, Add, Rename to %SpecialCallsign%, RenameSpecialCallsign
-;Menu, UnitMenu, Add, Join %SpecialCallsign%, JoinSpecialCallsign
+Menu, UnitMenu, Add, Rename to %TomCallsign%, TOMUnit
+Menu, UnitMenu, Add, Rename to %MaryCallsign%, RenameMaryCallsign
 Menu, UnitMenu, Add, Resume Lincoln, ResumeLincolnUnit
 Menu, UnitMenu, Add, Custom, JoinOtherUnit
 Menu, FullMenu, Add, Change Unit, :UnitMenu
@@ -173,24 +165,11 @@ Menu, FullMenu, Add, Pursuit Force, LethalPursuit
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, ClothingMenu, Add, Default Clothing, DutyClothes
-Menu, ClothingMenu, Add, Copilot Clothing, DutyCopilotClothes
-Menu, ClothingMenu, Add, Rain Clothing, DutyRainClothes
-Menu, ClothingMenu, Add, Winter Clothing, DutyWinterClothes
-
-Menu, EquipmentMenu, Add, Fire Extinguisher, DutyFireExtinguisher
-Menu, EquipmentMenu, Add, Default Weapons, DutyWeapons
-Menu, ClothingMenu, Add, Weapons, :EquipmentMenu
-
-Menu, FullMenu, Add, Duty Clothing, :ClothingMenu
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+Menu, SubMenu0, Add, type, MenuHandler
 Menu, SubMenu0, Add, sitchair3, MenuHandler
 Menu, SubMenu0, Add, finger, MenuHandler
 Menu, SubMenu0, Add, wave, MenuHandler
 Menu, SubMenu0, Add, prone, MenuHandler
-Menu, SubMenu0, Add, type, MenuHandler
 Menu, SubMenu0, Add, crawl, MenuHandler
 Menu, SubMenu0, Add, airplane, MenuHandler
 Menu, SubMenu0, Add, celebrate, MenuHandler
@@ -1180,7 +1159,7 @@ return
 
 ;Vehicle spawn handlers
 SpawnAlamo:
-	send, t/fspawn policealamo 4{enter}
+	send, t/fspawn policealamo{enter}
 return
 
 SpawnBuffalo:
@@ -1196,7 +1175,7 @@ SpawnInterceptor:
 return
 
 SpawnScout:
-	send, t/fspawn policescout 4{enter}
+	send, t/fspawn policescout{enter}
 return
 
 SpawnVan:
@@ -1205,6 +1184,14 @@ return
 
 SpawnFlatbed:
 	send, t/fspawn flatbed{enter}
+return
+
+SpawnScoutTED:
+	send, t/fspawn policescout 4{enter}
+return
+
+SpawnAlamoTED:
+	send, t/fspawn policealamo 4{enter}
 return
 
 ParkCruiser:
@@ -1224,6 +1211,12 @@ AdamUnit:
 	send, t/renameunit %AdamCallsign%{enter}
 	Sleep 500
 	send, t/rlow %BadgeNumber% show me renaming unit to %AdamCallsign%{enter}
+return
+
+TOMUnit:
+	send, t/renameunit %TomCallsign%{enter}
+	Sleep 500
+	send, t/rlow %BadgeNumber% show me renaming unit to %TomCallsign%{enter}
 return
 
 ResumeLincolnUnit:
@@ -1276,34 +1269,22 @@ CustomUnit:
 	} else if (CallSign="") {
 		MsgBox, Input is empty.
 	} else {
-		if WinExist("ahk_exe ragemp_v.exe") {
-			WinActivate
-			sleep 500
-			send, t/disbandunit {enter}
-			Sleep 500
-			send, t/leaveunit {enter}
-			Sleep 500
-			send, t/joinunit %CallSign% {enter}
-			Sleep 500
-			send, t/rlow %BadgeNumber% show me joining %CallSign% {enter}
-		} else {
-			MsgBox, , ERROR, Rage is not open!
-		}
+        WinActivate
+        sleep 500
+        send, t/disbandunit {enter}
+        Sleep 500
+        send, t/leaveunit {enter}
+        Sleep 500
+        send, t/joinunit %CallSign% {enter}
+        Sleep 500
+        send, t/rlow %BadgeNumber% show me leaving unit, and joining %CallSign% {enter}
 	}
 return
 
-RenameSpecialCallsign:
-	send, t/renameunit %SpecialCallsign% {enter}
+RenameMaryCallsign:
+	send, t/renameunit %MaryCallsign% {enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me renaming unit to %SpecialCallsign%{enter}
-return
-
-JoinSpecialCallsign:
-	send, t/disbandunit {enter}
-	Sleep 250
-	send, t/joinunit %SpecialCallsign% {enter}
-	Sleep 250
-	send, t/rlow %BadgeNumber% show me disbanding and joining %SpecialCallsign%{enter}
+	send, t/rlow %BadgeNumber% show me renaming unit to %MaryCallsign%{enter}
 return
 
 ;Traffic stop handlers
@@ -1335,9 +1316,6 @@ PDIssueSuspensionDemerit:
 
     SuspensionOk:
         Gui,Submit
-
-        if WinExist("ahk_exe ragemp_v.exe"){
-			WinActivate
             if (PlayerID="") {
                 MsgBox,, ERROR, You must enter a player ID in order to issue a suspension!
             }
@@ -1362,38 +1340,12 @@ PDIssueSuspensionDemerit:
             } else {
                 MsgBox,, ERROR, You must select a License Type and Demerit Suspend Type!
             }
-        } else {
-            MsgBox, , ERROR, Rage is not open!
-        }
     return
 
     SuspensionCancel:
         Gui, Destroy
     return
 
-return
-
-PDIssueBreathalyzer:
-    send, t/melow takes out the breathalyzer from the case{enter}
-    sleep 500
-    send, t/melow turns on the breathalyzer, and looks at the screen{enter}
-    sleep 500
-    send, t/dolow the screen would flash, and the numbers would read READY and BAC 0.0{enter}
-    sleep 500
-    send, t/melow removes a sealed mouthpeice from the case, unwraps the piece and puts it onto the machine{enter}
-    sleep 500
-    send, t/melow holds the breathalyzer up to the individual's mouth{enter}
-    sleep 500
-    send, t/dolow would they blow into the breathalyzer?{enter}
-    sleep 1000
-    send, t/breathanalyse{space}
-    sleep 500
-    KeyWait, Enter, d
-    {
-        send, t/dolow the machines screen would say READING{enter}
-        sleep 6000
-        send, t/dolow the machine would beep 3 times, and the BAC would read{space}
-    }
 return
 
 PDIssueCitationHandler:
@@ -1413,84 +1365,70 @@ PDIssueCitationHandler:
 	Gui, Show,, Issue Citation RPly
 	return
 
-	CitationOk:
-		Gui,Submit
-        if WinExist("ahk_exe ragemp_v.exe"){
-			WinActivate
-    		if ((DemeritSuspend="No" or DemeritSuspend="Select...") and CitationType!="Select...") {
-    			sleep 150
-    			send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
-    			sleep 350
-    			send, t/melow prints out the citation and grabs it from the printer{enter}
-    		} else if (DemeritSuspend="Yes" and CitationType!="Select...") {
-    			if (PlayerID!=""){
-    				sleep 150
-    				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
-    				sleep 350
-    				send, t/warndriver %PlayerID%{enter}
-    				sleep 500
-    				send, t/melow adds a demerit to the individual's driver's license{enter}
-    				sleep 350
-    				send, t/melow prints out the citation and grabs it from the printer{enter}
-    			} else {
-    				MsgBox,, ERROR, You must enter a player ID in order to issue a demerit!
-    			}
-    		} else if (DemeritSuspend="Demerit and Suspension" and CitationType!="Select...") {
-    			if (LicenseType="Driver" or LicenseType="Driver and Trucker") and (PlayerID!=""){
-    				sleep 150
-    				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
-    				sleep 350
-    				send, t/warndriver %PlayerID%{enter}
-    				sleep 500
-    				send, t/melow adds a demerit to the individual's driver's license{enter}
-    				sleep 500
-    				if (LicenseType="Driver"){
-    					send, t/suspend %PlayerID% driver 1{enter}
-    					sleep 500
-    					send, t/melow issues a 24 hour suspension on the individual's driver's license{enter}
-    					sleep 500
-    					send, t/melow prints out the citation and grabs it from the printer{enter}
-    				} else if (LicenseType="Driver and Trucker"){
-    					send, t/suspend %PlayerID% driver 1{enter}
-    					sleep 550
-    					send, t/suspend %PlayerID% trucker 1{enter}
-    					sleep 550
-    					send, t/melow issues a 24 hour suspension on both the individual's driver's and trucker's license{enter}
-    					sleep 500
-    					send, t/melow prints out the citation and grabs it from the printer{enter}
-    				}
-    			} else if (PlayerID="") {
-    				MsgBox,, ERROR, You must enter a player ID in order to issue a suspension!
-    			} else {
-    				MsgBox,, ERROR, You must select a license type in order to issue a suspension!
-    			}
-    		} else if (GeneralCitationType!="Select...") {
-    		    sleep 150
-    		    send, t/melow logs into the MDC and adds a "%GeneralCitationType%" citation to the individual's record{enter}
-    		    sleep 850
-    		    send, t/melow prints out the citation and grabs it from the printer{enter}
-    		} else {
-    			MsgBox,, ERROR, You must select a citation type!
-    		}
-        } else {
-            MsgBox, , ERROR, Rage is not open!
-        }
-	return
-
     CitationCancel:
-        Gui, Destroy
+        Gui, Cancel
     return
 
-return
+	CitationOk:
+		Gui,Submit
 
-;Sends a megaphone message at the start of a traffic stop
-PD1055Megaphone:
-    send, t/m Turn off your vehicle, and remain in the vehicle{enter}
-return
+		if ((DemeritSuspend="No" or DemeritSuspend="Select...") and CitationType!="Select...") {
+			sleep 150
+			send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
+			sleep 350
+			send, t/melow prints out the citation and grabs it from the printer{enter}
+		} else if (DemeritSuspend="Yes" and CitationType!="Select...") {
+			if (PlayerID!=""){
+				sleep 150
+				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
+				sleep 350
+				send, t/warndriver %PlayerID%{enter}
+				sleep 500
+				send, t/melow adds a demerit to the individual's driver's license{enter}
+				sleep 350
+				send, t/melow prints out the citation and grabs it from the printer{enter}
+			} else {
+				MsgBox,, ERROR, You must enter a player ID in order to issue a demerit!
+			}
+		} else if (DemeritSuspend="Demerit and Suspension" and CitationType!="Select...") {
+			if (LicenseType="Driver" or LicenseType="Driver and Trucker") and (PlayerID!=""){
+				sleep 150
+				send, t/melow logs into the MDC and adds a "%CitationType%" to the individual's record{enter}
+				sleep 350
+				send, t/warndriver %PlayerID%{enter}
+				sleep 500
+				send, t/melow adds a demerit to the individual's driver's license{enter}
+				sleep 500
+				if (LicenseType="Driver"){
+					send, t/suspend %PlayerID% driver 1{enter}
+					sleep 500
+					send, t/melow issues a 24 hour suspension on the individual's driver's license{enter}
+					sleep 500
+					send, t/melow prints out the citation and grabs it from the printer{enter}
+				} else if (LicenseType="Driver and Trucker"){
+					send, t/suspend %PlayerID% driver 1{enter}
+					sleep 550
+					send, t/suspend %PlayerID% trucker 1{enter}
+					sleep 550
+					send, t/melow issues a 24 hour suspension on both the individual's driver's and trucker's license{enter}
+					sleep 500
+					send, t/melow prints out the citation and grabs it from the printer{enter}
+				}
+			} else if (PlayerID="") {
+				MsgBox,, ERROR, You must enter a player ID in order to issue a suspension!
+			} else {
+				MsgBox,, ERROR, You must select a license type in order to issue a suspension!
+			}
+		} else if (GeneralCitationType!="Select...") {
+		    sleep 150
+		    send, t/melow logs into the MDC and adds a "%GeneralCitationType%" citation to the individual's record{enter}
+		    sleep 850
+		    send, t/melow prints out the citation and grabs it from the printer{enter}
+		} else {
+			MsgBox,, ERROR, You must select a citation type!
+		}
+	return
 
-; RPs the taking of the license and handing it back
-PDLicense:
-	send, t/melow looks at the license and hands it back{enter}
 return
 
 ; RPs the towing of a vehicle
@@ -1646,50 +1584,6 @@ PDUncuff:
     send, t/dolow would I be able{enter}
 return
 
-PDFrisk:
-	send, t/melow puts on a pair of non-latex gloves and attempts to frisk them{enter}
-    sleep 500
-    send, t/dolow would I be able{enter}
-return
-
-PDLicenseFrisk:
-	send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a license{enter}
-	Sleep 500
-	send, t/dolow would I be able to frisk, and would I find a license?{enter}
-return
-
-PDKeyFrisk:
-	send, t/melow attempts to locate a set of keys{enter}
-	Sleep 500
-	send, t/dolow would I find them?{enter}
-return
-
-PDPhoneFrisk:
-    send, t/melow attempts to locate the individuals phone{enter}
-    sleep 500
-    send, t/dolow would I find it?{enter}
-return
-
-PDKeyLicenseFrisk:
-	send, send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a set of keys and a license{enter}
-	Sleep 500
-	send, t/dolow would I be able, and would I find keys and/or license?{enter}
-return
-
-PDLicensePhoneFrisk:
-    send, t/melow puts on a pair of non-latex gloves and attempts to frisk them while also looking for a license, and a cellphone{enter}
-    sleep 500
-    send, t/dolow would I be able, and would I find a license and/or a cellphone?{enter}
-return
-
-PDUnlockCuffedCar:
-	send, t/melow takes the keys out, clicks the unlock button and puts them back where they were{enter}
-return
-
-PDLicenseCuff:
-	send, t/melow takes out the license, carefully reading it over and puts it back where it was{enter}
-return
-
 PDReleaseForm:
 	send, t/melow takes a pen out from their breast pocket and flips through the prisoner transfer forms{enter}
 	Sleep 650
@@ -1747,18 +1641,6 @@ PDFingerprints:
 	}
 return
 
-DOCOpenGate:
-    send, t/melow Punches in the code on the gate to open it{enter}
-    sleep 250
-    send, t/gate{enter}
-return
-
-DOCCloseGate:
-    send, t/melow Clicks a button on the cruiser to close the gate{enter}
-    sleep 250
-    send, t/gate{enter}
-return
-
 ;Start and end watch handlers
 StartWatch:
 	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
@@ -1776,30 +1658,7 @@ StartWatch:
 	send, t/createunit %LincolnCallsign% {enter}
     sleep 500
     send, {F8}
-    Sleep 500
-    send, {alt down}{F9}
-    Sleep 500
-    send, {alt up}
-return
-
-StartWatchAdam:
-	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
-	Sleep 750
-	send, t/melow puts on their duty uniform{enter}
-	Sleep 750
-	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on{enter}
-	Sleep 750
-	send, t/dolow the light would start blinking green{enter}
-	Sleep 750
-	send, t/time {enter}
-	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %AdamCallsign%{enter}
-	Sleep 750
-	send, t/createunit %AdamCallsign%{enter}
-    Sleep 750
-    send, {alt down}{F9 down}
-    Sleep 100
-    send, {alt up}{F9 up}
+    sleep 500
 return
 
 EndWatch:
@@ -1816,203 +1675,6 @@ EndWatch:
     send, t/melow takes of his duty uniform and places it in the dirty clothes shoot{enter}
     sleep 500
     send, t/melow takes his civilian clothing and puts them on{enter}
-return
-
-;Duty clothing handlers
-DutyClothes:
-	send, t/fl{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down}{enter}
-	Sleep 350
-	send, {up}{enter}
-	Sleep 350
-	send, {down 3}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {up 4}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {up 2}{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {up 2}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down 3}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {Esc}
-return
-
-DutyRainClothes:
-	send, t/fl{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down 8}{enter}
-	Sleep 350
-	send, {up 8}{enter}
-	Sleep 350
-	send, {down 3}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {up 4}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {up 2}{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 350
-	send, {down 3}{enter}
-	Sleep 350
-	send, {down 4}{enter}
-	Sleep 350
-	send, {Esc}
-return
-
-DutyWinterClothes:
-	send, t/fl{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 7}{enter}
-	Sleep 250
-	send, {up 7}{enter}
-	Sleep 250
-	send, {down 3}{enter}
-	Sleep 250
-	send, {down 4}{enter}
-	Sleep 250
-	send, {up 4}{enter}
-	Sleep 250
-	send, {down 4}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {up 2}{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 3}{enter}
-	Sleep 250
-	send, {down 4}{enter}
-	Sleep 350
-	send, {Esc}
-return
-
-DutyCopilotClothes:
-	send, t/fl{enter}
-	Sleep 350
-	send, {enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 7}{enter}
-	Sleep 250
-	send, {up 7}{enter}
-	Sleep 250
-	send, {down 3}{enter}
-	Sleep 250
-	send, {down 8}{enter}
-	Sleep 250
-	send, {down 4}{enter}
-	Sleep 250
-	send, {down 4}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {up 2}{enter}
-	Sleep 250
-	send, {enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 5}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 350
-	send, {Esc}
-return
-
-DutyFireExtinguisher:
-	send, t/fl{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 6}{enter}
-	Sleep 250
-	send, {up 6}{enter}
-	Sleep 350
-	send, {Esc}
-return
-
-DutyWeapons:
-	send, t/fl{enter}
-	Sleep 350
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 250
-	send, {down 5}{enter}
-	Sleep 250
-	send, {down 2}{enter}
-	Sleep 350
-	send, {esc}
 return
 
 ; Felony stop megaphone steps
