@@ -1641,7 +1641,7 @@ StartWatch:
 	Sleep 500
 	send, t/time {enter}
 	Sleep 750
-	send, t/createunit %LincolnCallsign% {enter}
+	send, t/createunit %TomCallsign% {enter}
 	Sleep 750
 	send, t/rlow %BadgeNumber% show me start of watch under %TomCallsign% {enter}
     sleep 500
