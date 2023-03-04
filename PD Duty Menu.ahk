@@ -49,6 +49,13 @@ Ins::
     return
 return
 
+;Numpad8::
+;	send, t/cruise 84{enter}
+;return
+
+;Numpad9::
+;	send, t/cruise 145{enter}
+;return
 
 ;self explanitory
 F9::
@@ -77,14 +84,7 @@ Menu, FullMenu, Add, Park Cruiser, ParkCruiser
 
 Menu, FullMenu, Add, Cuff, PDCuff
 Menu, FullMenu, Add, Uncuff, PDUncuff
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-Menu, WatchMenu, Add, Start Watch, StartWatch
-Menu, WatchMenu, Add, Start Watch %TomCallsign%, StartWatchTom
-Menu, WatchMenu, Add, Start Watch %MaryCallsign%, StartWatchMary
-Menu, WatchMenu, Add, End Watch, EndWatch
-Menu, FullMenu, Add, Start/End Watch, :WatchMenu
+Menu, FullMenu, Add, Initial BLS, PDInitialBLS
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -116,48 +116,52 @@ Menu, FullMenu, Add, Traffic Stop/Processing Procedure, :RPMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
-Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
-Menu, LifeSupportMenu, Add, Grab Body Bag, PDGrabBodyBag
-Menu, LifeSupportMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
-Menu, FullMenu, Add, Life Support, :LifeSupportMenu
+;Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
+;Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
+;Menu, FullMenu, Add, Life Support, :LifeSupportMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, SceneMenu, Add, Grab Barriers, PDGrabBarriers
-Menu, SceneMenu, Add, Gather All Barriers, PDGatherBarriers
-Menu, SceneMenu, Add, Store Barriers, PDStoreBarriers
-Menu, FullMenu, Add, Scene Management, :SceneMenu
+Menu, DeceasedMenu, Add, Grab Body Bag, PDGrabBodyBag
+Menu, DeceasedMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
+Menu, FullMenu, Add, Deceased, :DeceasedMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, VehicleMenu, Add, Scout, SpawnScout
+;Menu, SceneMenu, Add, Grab Barriers, PDGrabBarriers
+;Menu, SceneMenu, Add, Gather All Barriers, PDGatherBarriers
+;Menu, SceneMenu, Add, Store Barriers, PDStoreBarriers
+;Menu, FullMenu, Add, Scene Management, :SceneMenu
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 Menu, VehicleMenu, Add, Scout - TED, SpawnScoutTED
+Menu, VehicleMenu, Add, Scout, SpawnScout
 Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
-Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
+Menu, VehicleMenu, Add, Drafter, SpawnDrafter
+Menu, VehicleMenu, Add, Crown Vic, SpawnVic
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
-Menu, VehicleMenu, Add, Alamo, SpawnAlamo
+Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
 Menu, VehicleMenu, Add, Alamo - TED, SpawnAlamoTED
+Menu, VehicleMenu, Add, Alamo, SpawnAlamo
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
-Menu, UnitMenu, Add, Rename to %LincolnCallsign%, LincolnUnit
-Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
 Menu, UnitMenu, Add, Rename to %TomCallsign%, TOMUnit
 Menu, UnitMenu, Add, Rename to %MaryCallsign%, RenameMaryCallsign
-Menu, UnitMenu, Add, Resume Lincoln, ResumeLincolnUnit
-Menu, UnitMenu, Add, Custom, JoinOtherUnit
+Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
+Menu, UnitMenu, Add, Rename to %LincolnCallsign%, LincolnUnit
+Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
 Menu, FullMenu, Add, Change Unit, :UnitMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, DRadioMenu, Add, PD to DOC, DRadioPDtoDOC
-Menu, DRadioMenu, Add, PD to MD, DRadioPDtoMD
 Menu, DRadioMenu, Add, 10-15 to DOC, DRadio
 Menu, DRadioMenu, Add, 10-15 to DOC HVT, DRadioHVT
+Menu, DRadioMenu, Add, PD to MD, DRadioPDtoMD
+Menu, DRadioMenu, Add, PD to DOC, DRadioPDtoDOC
 Menu, DRadioMenu, Add, Injured 10-15, DRadioMDPris
 Menu, FullMenu, Add, Departmental Radio, :DRadioMenu
 
@@ -178,6 +182,13 @@ Menu, SubMenu0, Add, celebrate, MenuHandler
 Menu, SubMenu0, Add, shakeoff, MenuHandler
 
 Menu, FullMenuAnim, Add, Favorites, :SubMenu0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Menu, WatchMenu, Add, Start Watch, StartWatch
+Menu, WatchMenu, Add, End Watch, EndWatch
+Menu, FullMenu, Add, Start/End Watch, :WatchMenu
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, SubMenu1.1, Add, DJ, MenuHandler
@@ -1172,6 +1183,14 @@ SpawnMotorcycle:
     send, t/fspawn policeb{enter}
 return
 
+SpawnDrafter:
+	send, t/fspawn policedrafter 4{enter}
+return
+
+SpawnVic:
+	send, t/fspawn police{enter}
+return
+
 SpawnInterceptor:
 	send, t/fspawn police3 4{enter}
 return
@@ -1221,14 +1240,6 @@ TOMUnit:
 	send, t/rlow %BadgeNumber% show me renaming unit to %TomCallsign%{enter}
 return
 
-ResumeLincolnUnit:
-	send, t/leaveunit {enter}
-	Sleep 500
-	send, t/createunit %LincolnCallsign% {enter}
-	Sleep 500
-	send, t/rlow %BadgeNumber% show me leaving unit and resuming under %LincolnCallsign%{enter}
-return
-
 ; Disbands or Leaves current unit, radios the joining of a new and sets the joinunit
 JoinOtherUnit:
     Gui, Destroy
@@ -1264,25 +1275,6 @@ JoinOtherUnit:
     return
 return
 
-CustomUnit:
-	InputBox, CallSign, Unit, Enter Callsign, , 250, 125
-	if ErrorLevel {
-		MsgBox, Cancel was pressed.
-	} else if (CallSign="") {
-		MsgBox, Input is empty.
-	} else {
-        WinActivate
-        sleep 500
-        send, t/disbandunit {enter}
-        Sleep 500
-        send, t/leaveunit {enter}
-        Sleep 500
-        send, t/joinunit %CallSign% {enter}
-        Sleep 500
-        send, t/rlow %BadgeNumber% show me leaving unit, and joining %CallSign% {enter}
-	}
-return
-
 RenameMaryCallsign:
 	send, t/renameunit %MaryCallsign% {enter}
 	Sleep 500
@@ -1291,7 +1283,7 @@ return
 
 ;Traffic stop handlers
 PDHandCitation:
-	send, t/melow Hands the citation to the driver{enter}
+	send, t/melow Holds out a citation for the driver{enter}
 return
 
 ;Traffic Citation on empty Vehicle
@@ -1300,7 +1292,7 @@ PDNoDriverCitation:
 return
 
 PDNoBikeDriverCitation:
-    send, t/melow Places the citation under the bikes seat, and secures it with tape{enter}
+    send, t/melow Places the citation under the bikes seat, securing it with tape{enter}
 return
 
 PDIssueSuspensionDemerit:
@@ -1438,8 +1430,6 @@ TowVehicle:
 	Send, t/melow opens the control panel, pulls down a lever, and lowers the ramp{enter}
 	Sleep, 3000
 	Send, t/melow deploys the winch cables and securely attaches the cables to the tow hook of the vehicle{enter}
-    sleep, 3000
-    send, t/melow Puts the transmission into neutral{enter}
 	Sleep, 3000
 	Send, t/melow pulls another lever on the control panel and starts the winch{enter}
 	Sleep, 3000
@@ -1576,14 +1566,10 @@ return
 ;Prisoner processing and arrest handlers
 PDCuff:
 	send, t/melow grabs a pair of cuffs from my duty belt and attempts to put them around their wrists{enter}
-    sleep 500
-    send, t/dolow would I be able{enter}
 return
 
 PDUncuff:
 	send, t/melow takes the handcuff key from my duty belt and attempts to uncuff them{enter}
-    sleep 500
-    send, t/dolow would I be able{enter}
 return
 
 PDReleaseForm:
@@ -1645,61 +1631,19 @@ return
 
 ;Start and end watch handlers
 StartWatch:
-	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
+	send, t/melow Undresses from his civilian clothing and hangs them in his locker{enter}
 	Sleep 500
-	send, t/melow puts on their duty uniform{enter}
+	send, t/melow puts on his duty uniform{enter}
 	Sleep 500
-	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
+	send, t/melow grabs a body cam from the locker, securing it to his chest and turns it on {enter}
 	Sleep 500
 	send, t/dolow the light would start blinking green {enter}
 	Sleep 500
 	send, t/time {enter}
-	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %LincolnCallsign% {enter}
 	Sleep 750
 	send, t/createunit %LincolnCallsign% {enter}
-    sleep 500
-    send, {F8}
-    sleep 500
-return
-
-;Start and end watch handlers
-StartWatchTom:
-	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
-	Sleep 500
-	send, t/melow puts on their duty uniform{enter}
-	Sleep 500
-	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
-	Sleep 500
-	send, t/dolow the light would start blinking green {enter}
-	Sleep 500
-	send, t/time {enter}
 	Sleep 750
 	send, t/rlow %BadgeNumber% show me start of watch under %TomCallsign% {enter}
-	Sleep 750
-	send, t/createunit %TomCallsign% {enter}
-    sleep 500
-    send, {F8}
-    sleep 500
-return
-
-;Start and end watch handlers
-StartWatchMary:
-	send, t/melow takes off their civilian clothes and puts them in their locker{enter}
-	Sleep 500
-	send, t/melow puts on their duty uniform{enter}
-	Sleep 500
-	send, t/melow grabs a body cam from the locker, securing it to their chest and turns it on {enter}
-	Sleep 500
-	send, t/dolow the light would start blinking green {enter}
-	Sleep 500
-	send, t/time {enter}
-	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %MaryCallsign% {enter}
-	Sleep 750
-	send, t/createunit %MaryCallsign% {enter}
-    sleep 500
-    send, {F8}
     sleep 500
 return
 
