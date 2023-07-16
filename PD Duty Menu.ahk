@@ -40,9 +40,9 @@ Ins::
 
     TraceConfirm:
 		Gui,Submit
-		send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key{enter}
+			send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key{enter}
 		sleep, 200
-        if (RespondType="Positive Trace") {
+		if (RespondType="Positive Trace") {
 			send, t/dolow the laptop would show a map of Los Santos, and start zooming into a specific area before stopping and beeping{enter}
 		} else if (RespondType="Negative Trace") {
 			send, t/dolow the laptop would show a map of Los Santos, and a pop-up box would appear on the screen showing an error{enter}
