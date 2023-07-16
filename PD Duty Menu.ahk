@@ -5,10 +5,12 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global LincolnCallsign := "22-L-12"
-global AdamCallsign := "22-A-12"
-global TomCallsign := "TOM-12"
-global MaryCallsign := "MARY-12"
+global NormalCallSign := "3-U-12"
+global GangCallsign := "3-G-13"
+global AdamCallsign := "3-A-13"
+global TomCallsign := "TOM-10"
+global MaryCallsign := "MARY-10"
+global MRCallsign := "5-P-13"
 global BadgeNumber := "24410"
 
 ; opens the mini MDC. If your ctrl button gets stuck or you cannot press the windows key, remove this.
@@ -24,38 +26,51 @@ NumpadAdd::
 	send, {F7}
 return
 
-;Insert Key allows you to quick respond to an ID
+send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key
+sleep, 100
+
+
+;Insert Key allows you to quickly run the trace rp
 Ins::
     Gui, Destroy
-    Gui, Add, Text,, Enter Respond ID:
-    Gui, Add, Edit, w300 vRespondId,
-    Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Check GPS
-    Gui, Add, Button, Default x80 gRespondConfirm w80, Ok
-    ;Gui, Add, Button, Default x+0 gRespondCancel w80, Cancel
+    Gui, Add, DropdownList, w300 vRespondType, Positive Trace||Negative Trace
+    Gui, Add, Button, Default x80 gTraceConfirm w80, Ok
     Gui, Show,, Respond ID
     return
 
-    RespondConfirm:
+    TraceConfirm:
 		Gui,Submit
-        if (RespondId!=""){
-            if (RespondType="Check GPS") {
-                send, t/setcall %RespondId%{enter}
-            } else if (RespondType="Respond To Call") {
-                send, t/resp %RespondId%{enter}
-            }
-        } else {
-            MsgBox,, ERROR, The respond ID empty. Must enter a value.
-        }
+		send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key{enter}
+		sleep, 200
+        if (RespondType="Positive Trace") {
+			send, t/dolow the laptop would show a map of Los Santos, and start zooming into a specific area before stopping and beeping{enter}
+		} else if (RespondType="Negative Trace") {
+			send, t/dolow the laptop would show a map of Los Santos, and a pop-up box would appear on the screen showing an error{enter}
+		}
     return
 return
 
-;Numpad8::
-;	send, t/cruise 84{enter}
-;return
+;Numpad3 allows you to quickly run the reload trace rp
+Numpad3::
+	Gui, Destroy
+	Gui, Add, DropdownList, w300 vRespondType, Reload Positive Trace||Reload Negative Trace
+	Gui, Add, Button, Default x80 gReloadTraceConfirm w80, Ok
+	Gui, Show,, Respond ID
+	return
 
-;Numpad9::
-;	send, t/cruise 145{enter}
-;return
+	ReloadTraceConfirm:
+		Gui,Submit
+		send, t/melow looks over at the laptop, smashes a button on the keyboard, looking away.{enter}
+		sleep, 200
+
+		if (RespondType="Reload Positive Trace") {
+			send, t/dolow the laptop would show a map of Los Santos, and start zooming into a specific area before stopping and beeping{enter}
+		} else if (RespondType="Reload Negative Trace") {
+			send, t/dolow the laptop would show a map of Los Santos, and a pop-up box would appear on the screen showing an error{enter}
+		}
+
+	return
+return
 
 ;self explanitory
 F9::
@@ -68,7 +83,7 @@ F10::
 return
 
 ;sets mouse button 4 to send p so you can use the phone button for TAC
-;XButton1::p
+XButton1::p
 
 ;kill switch
 F12::ExitApp
@@ -83,48 +98,49 @@ Menu, FullMenu, Add, Park Cruiser, ParkCruiser
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, FullMenu, Add, Cuff, PDCuff
-Menu, FullMenu, Add, Uncuff, PDUncuff
-Menu, FullMenu, Add, Initial BLS, PDInitialBLS
+;Menu, FullMenu, Add, Uncuff, PDUncuff
+;Menu, FullMenu, Add, Initial BLS, PDInitialBLS
+;Menu, FullMenu, Add, Pursuit Force, LethalPursuit
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, TrafficStopMenu, Add, Citation: Issue, PDIssueCitationHandler
 Menu, TrafficStopMenu, Add, Citation: Hand , PDHandCitation
-Menu, TrafficStopMenu, Add, Citation: No Driver , PDNoDriverCitation
-Menu, TrafficStopMenu, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
+;Menu, TrafficStopMenu, Add, Citation: No Driver , PDNoDriverCitation
+;Menu, TrafficStopMenu, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
 Menu, TrafficStopMenu, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
-Menu, RPMenu, Add, Traffic Stop, :TrafficStopMenu
+;Menu, FullMenu, Add, Traffic Stop, :TrafficStopMenu
 
 Menu, FelonyStopMenu, Add, Step 1: Toss keys from ignition, FelonyStop1
 Menu, FelonyStopMenu, Add, Step 2: Open vehicle door slowly, FelonyStop2
 Menu, FelonyStopMenu, Add, Step 3: Step out, FelonyStop3
 Menu, FelonyStopMenu, Add, Step 4: Full 360, FelonyStop4
 Menu, FelonyStopMenu, Add, Step 5: Walk backwards, FelonyStop5
-Menu, RPMenu, Add, Felony Stop, :FelonyStopMenu
+;Menu, FullMenu, Add, Felony Stop, :FelonyStopMenu
 
 Menu, InmateProcessingMenu, Add, Mugshot, PDMugshot
 Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
 Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
 Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
-Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
+;Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
 
 Menu, TowMenu, Add, Tow Vehicle, TowVehicle
 Menu, TowMenu, Add, Untow Vehicle, UnTowVehicle
-Menu, RPMenu, Add, Towing, :TowMenu
+;Menu, RPMenu, Add, Towing, :TowMenu
 
-Menu, FullMenu, Add, Traffic Stop/Processing Procedure, :RPMenu
+;Menu, FullMenu, Add, Traffic Stop/Processing Procedure, :RPMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
-;Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
+Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
+Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
 ;Menu, FullMenu, Add, Life Support, :LifeSupportMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, DeceasedMenu, Add, Grab Body Bag, PDGrabBodyBag
 Menu, DeceasedMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
-Menu, FullMenu, Add, Deceased, :DeceasedMenu
+;Menu, FullMenu, Add, Deceased, :DeceasedMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -135,39 +151,44 @@ Menu, FullMenu, Add, Deceased, :DeceasedMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, VehicleMenu, Add, Scout - TED, SpawnScoutTED
+Menu, VehicleMenu, Add, Gang Scout, SpawnScoutGU
+Menu, VehicleMenu, Add, Gang Caracara, SpawnCaracaraGU
+Menu, VehicleMenu, Add, Unmarked Scout, SpawnUnmarkedScout
+Menu, VehicleMenu, Add, K9 Scout, SpawnScoutK9
+Menu, VehicleMenu, Add, Traffic Scout, SpawnScoutTED
+Menu, VehicleMenu, Add, Drafter, SpawnDrafter
+Menu, VehicleMenu, Add, Kamacho, SpawnKamacho
 Menu, VehicleMenu, Add, Scout, SpawnScout
 Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
-Menu, VehicleMenu, Add, Drafter, SpawnDrafter
+Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
 Menu, VehicleMenu, Add, Crown Vic, SpawnVic
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
-Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
-Menu, VehicleMenu, Add, Alamo - TED, SpawnAlamoTED
+Menu, VehicleMenu, Add, Traffic Alamo, SpawnAlamoTED
+;Menu, VehicleMenu, Add, Gang Alamo, SpawnAlamoGU
 Menu, VehicleMenu, Add, Alamo, SpawnAlamo
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, UnitMenu, Add, Rename to %TomCallsign%, TOMUnit
-Menu, UnitMenu, Add, Rename to %MaryCallsign%, RenameMaryCallsign
-Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
-Menu, UnitMenu, Add, Rename to %LincolnCallsign%, LincolnUnit
-Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
-Menu, FullMenu, Add, Change Unit, :UnitMenu
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 Menu, DRadioMenu, Add, 10-15 to DOC, DRadio
-Menu, DRadioMenu, Add, 10-15 to DOC HVT, DRadioHVT
-Menu, DRadioMenu, Add, PD to MD, DRadioPDtoMD
 Menu, DRadioMenu, Add, PD to DOC, DRadioPDtoDOC
-Menu, DRadioMenu, Add, Injured 10-15, DRadioMDPris
+Menu, DRadioMenu, Add, DB Investigation, DRadioDB
+;Menu, DRadioMenu, Add, 10-15 to DOC HVT, DRadioHVT
+;Menu, DRadioMenu, Add, PD to MD, DRadioPDtoMD
+;Menu, DRadioMenu, Add, Injured 10-15, DRadioMDPris
 Menu, FullMenu, Add, Departmental Radio, :DRadioMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, FullMenu, Add, Pursuit Force, LethalPursuit
+Menu, UnitMenu, Add, Rename to %NormalCallSign%, NormalUnit
+Menu, UnitMenu, Add, Rename to %GangCallsign%, LincolnUnit
+Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
+Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
+Menu, UnitMenu, Add, Rename to %TomCallsign%, TOMUnit
+Menu, UnitMenu, Add, Rename to %MaryCallsign%, RenameMaryCallsign
+Menu, UnitMenu, Add, Rename to %MRCallsign%, MRUnit
+Menu, FullMenu, Add, Change Unit, :UnitMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1187,6 +1208,10 @@ SpawnDrafter:
 	send, t/fspawn policedrafter 4{enter}
 return
 
+SpawnKamacho:
+	send, t/fspawn policekamacho{enter}
+return
+
 SpawnVic:
 	send, t/fspawn police{enter}
 return
@@ -1211,8 +1236,28 @@ SpawnScoutTED:
 	send, t/fspawn policescout 4{enter}
 return
 
+SpawnScoutGU:
+	send, t/fspawn policescout 5{enter}
+return
+
+SpawnCaracaraGU:
+	send, t/fspawn policecaracara 5{enter}
+return
+
+SpawnUnmarkedScout:
+	send, t/fspawn policescout2{enter}
+return
+
+SpawnAlamoGU:
+	send, t/fspawn policealamo 5{enter}
+return
+
 SpawnAlamoTED:
 	send, t/fspawn policealamo 4{enter}
+return
+
+SpawnScoutK9:
+	send, t/fspawn policescout 7{enter}
 return
 
 ParkCruiser:
@@ -1221,17 +1266,30 @@ ParkCruiser:
 	send, t {up}{enter}
 return
 
+;Normal GO Unit
+NormalUnit:
+	send, t/renameunit %NormalCallSign%{enter}
+	sleep 500
+	send, t/rlow %BadgeNumber% show me renaming unit to %NormalCallSign%{enter}
+return
+
 ;Unit name handlers
 LincolnUnit:
-	send, t/renameunit %LincolnCallsign%{enter}
+	send, t/renameunit %GangCallsign%{enter}
 	Sleep 500
-	send, t/rlow %BadgeNumber% show me renaming unit to %LincolnCallsign%{enter}
+	send, t/rlow %BadgeNumber% show me renaming unit to %GangCallsign%{enter}
 return
 
 AdamUnit:
 	send, t/renameunit %AdamCallsign%{enter}
 	Sleep 500
 	send, t/rlow %BadgeNumber% show me renaming unit to %AdamCallsign%{enter}
+return
+
+MRUnit:
+	send, t/renameunit %MRCallsign%{enter}
+	Sleep 500
+	send, t/rlow %BadgeNumber% show me renaming unit to %MRCallsign%{enter}
 return
 
 TOMUnit:
@@ -1492,6 +1550,11 @@ DRadioHVT:
 	}
 Return
 
+DRadioDB:
+	send, t/deplow PD to SD, be advised, a DB unit will be entering your jurisdiction in a marked cruiser for investigative purposes.{enter}
+	sleep 500
+return
+
 DRadioMDPris:
 	send, t/backup FOR MD{enter}
 	Sleep 2000
@@ -1631,9 +1694,7 @@ return
 
 ;Start and end watch handlers
 StartWatch:
-	send, t/melow Undresses from his civilian clothing and hangs them in his locker{enter}
-	Sleep 500
-	send, t/melow puts on his duty uniform{enter}
+	send, t/melow Undresses from his civilian clothing and hangs them in his locker and puts on his uniform{enter}
 	Sleep 500
 	send, t/melow grabs a body cam from the locker, securing it to his chest and turns it on {enter}
 	Sleep 500
@@ -1641,9 +1702,9 @@ StartWatch:
 	Sleep 500
 	send, t/time {enter}
 	Sleep 750
-	send, t/createunit %TomCallsign% {enter}
+	send, t/createunit %NormalCallSign% {enter}
 	Sleep 750
-	send, t/rlow %BadgeNumber% show me start of watch under %TomCallsign% {enter}
+	send, t/rlow %BadgeNumber% show me start of watch under %NormalCallSign% {enter}
     sleep 500
 return
 
@@ -1658,9 +1719,8 @@ EndWatch:
     sleep 500
     send, t/melow takes off the body cam, and secures it back in the locker{enter}
     sleep 500
-    send, t/melow takes of his duty uniform and places it in the dirty clothes shoot{enter}
-    sleep 500
-    send, t/melow takes his civilian clothing and puts them on{enter}
+    send, t/melow takes of his duty uniform and places it into the laundry shoot and puts on his civilian clothing{enter}
+	sleep 500
 return
 
 ; Felony stop megaphone steps
