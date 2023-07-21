@@ -29,9 +29,8 @@ return
 send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key
 sleep, 100
 
-
 ;Insert Key allows you to quickly run the trace rp
-Ins::
+NumPad3::
     Gui, Destroy
     Gui, Add, DropdownList, w300 vRespondType, Positive Trace||Negative Trace
     Gui, Add, Button, Default x80 gTraceConfirm w80, Ok
@@ -40,18 +39,21 @@ Ins::
 
     TraceConfirm:
 		Gui,Submit
-			send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key{enter}
+		send, t/melow opens up the laptop, and loads MDC's database, entering in a number and mashing enter on the enter key{enter}
+		sleep, 200
+		send, t/dolow The laptop would chirp, indicating the entered number is valid.{enter}
+
 		sleep, 200
 		if (RespondType="Positive Trace") {
-			send, t/dolow the laptop would show a map of Los Santos, and start zooming into a specific area before stopping and beeping{enter}
+			send, t/dolow The laptop would chirp, and start passively showing the location of the trace{enter}
 		} else if (RespondType="Negative Trace") {
-			send, t/dolow the laptop would show a map of Los Santos, and a pop-up box would appear on the screen showing an error{enter}
+			send, t/dolow The laptop would make a chirp, and a pop-up box would appear on the screen showing an error{enter}
 		}
     return
 return
 
 ;Numpad3 allows you to quickly run the reload trace rp
-Numpad3::
+NumPad9::
 	Gui, Destroy
 	Gui, Add, DropdownList, w300 vRespondType, Reload Positive Trace||Reload Negative Trace
 	Gui, Add, Button, Default x80 gReloadTraceConfirm w80, Ok
@@ -60,13 +62,13 @@ Numpad3::
 
 	ReloadTraceConfirm:
 		Gui,Submit
-		send, t/melow looks over at the laptop, smashes a button on the keyboard, looking away.{enter}
+		send, t/melow looks over at the laptop, and reloads the open tab.{enter}
 		sleep, 200
 
 		if (RespondType="Reload Positive Trace") {
-			send, t/dolow the laptop would show a map of Los Santos, and start zooming into a specific area before stopping and beeping{enter}
+			send, t/dolow The laptop would show a map of Los Santos, and start passively showing the location of the trace{enter}
 		} else if (RespondType="Reload Negative Trace") {
-			send, t/dolow the laptop would show a map of Los Santos, and a pop-up box would appear on the screen showing an error{enter}
+			send, t/dolow The laptop would make a chirp, and a pop-up box would appear on the screen showing an error{enter}
 		}
 
 	return
@@ -104,24 +106,24 @@ Menu, FullMenu, Add, Cuff, PDCuff
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, TrafficStopMenu, Add, Citation: Issue, PDIssueCitationHandler
-Menu, TrafficStopMenu, Add, Citation: Hand , PDHandCitation
+;Menu, TrafficStopMenu, Add, Citation: Issue, PDIssueCitationHandler
+;Menu, TrafficStopMenu, Add, Citation: Hand , PDHandCitation
 ;Menu, TrafficStopMenu, Add, Citation: No Driver , PDNoDriverCitation
 ;Menu, TrafficStopMenu, Add, Citation: No Bike Driver , PDNoBikeDriverCitation
-Menu, TrafficStopMenu, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
+;Menu, TrafficStopMenu, Add, License Suspension/Demerit,PDIssueSuspensionDemerit
 ;Menu, FullMenu, Add, Traffic Stop, :TrafficStopMenu
 
-Menu, FelonyStopMenu, Add, Step 1: Toss keys from ignition, FelonyStop1
-Menu, FelonyStopMenu, Add, Step 2: Open vehicle door slowly, FelonyStop2
-Menu, FelonyStopMenu, Add, Step 3: Step out, FelonyStop3
-Menu, FelonyStopMenu, Add, Step 4: Full 360, FelonyStop4
-Menu, FelonyStopMenu, Add, Step 5: Walk backwards, FelonyStop5
+;Menu, FelonyStopMenu, Add, Step 1: Toss keys from ignition, FelonyStop1
+;Menu, FelonyStopMenu, Add, Step 2: Open vehicle door slowly, FelonyStop2
+;Menu, FelonyStopMenu, Add, Step 3: Step out, FelonyStop3
+;Menu, FelonyStopMenu, Add, Step 4: Full 360, FelonyStop4
+;Menu, FelonyStopMenu, Add, Step 5: Walk backwards, FelonyStop5
 ;Menu, FullMenu, Add, Felony Stop, :FelonyStopMenu
 
-Menu, InmateProcessingMenu, Add, Mugshot, PDMugshot
-Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
-Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
-Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
+;Menu, InmateProcessingMenu, Add, Mugshot, PDMugshot
+;Menu, InmateProcessingMenu, Add, On Scene Mugshot, PDOnSceneMugshot
+;Menu, InmateProcessingMenu, Add, Fingerprints, PDFingerprints
+;Menu, InmateProcessingMenu, Add, Release form, PDReleaseForm
 ;Menu, RPMenu, Add, Inmate Processing, :InmateProcessingMenu
 
 Menu, TowMenu, Add, Tow Vehicle, TowVehicle
@@ -132,14 +134,14 @@ Menu, TowMenu, Add, Untow Vehicle, UnTowVehicle
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
-Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
+;Menu, LifeSupportMenu, Add, Grab BLS Kit, PDGrabBLS
+;Menu, LifeSupportMenu, Add, Initial BLS, PDInitialBLS
 ;Menu, FullMenu, Add, Life Support, :LifeSupportMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, DeceasedMenu, Add, Grab Body Bag, PDGrabBodyBag
-Menu, DeceasedMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
+;Menu, DeceasedMenu, Add, Grab Body Bag, PDGrabBodyBag
+;Menu, DeceasedMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
 ;Menu, FullMenu, Add, Deceased, :DeceasedMenu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -151,21 +153,31 @@ Menu, DeceasedMenu, Add, Load Into Body Bag, PDLoadIntoBodyBag
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+Menu, VehicleMenu, Add, Marked Scout, SpawnScout
 Menu, VehicleMenu, Add, Gang Scout, SpawnScoutGU
 Menu, VehicleMenu, Add, Gang Caracara, SpawnCaracaraGU
-Menu, VehicleMenu, Add, Unmarked Scout, SpawnUnmarkedScout
-Menu, VehicleMenu, Add, K9 Scout, SpawnScoutK9
-Menu, VehicleMenu, Add, Traffic Scout, SpawnScoutTED
-Menu, VehicleMenu, Add, Drafter, SpawnDrafter
+Menu, VehicleMenu, Add, Slicktop Buffalo, SpawnBuffalo
 Menu, VehicleMenu, Add, Kamacho, SpawnKamacho
-Menu, VehicleMenu, Add, Scout, SpawnScout
-Menu, VehicleMenu, Add, Interceptor, SpawnInterceptor
-Menu, VehicleMenu, Add, Motorcycle, SpawnMotorcycle
-Menu, VehicleMenu, Add, Crown Vic, SpawnVic
+Menu, VehicleMenu, Add, Drafter, SpawnDrafter
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
-Menu, VehicleMenu, Add, Traffic Alamo, SpawnAlamoTED
-;Menu, VehicleMenu, Add, Gang Alamo, SpawnAlamoGU
-Menu, VehicleMenu, Add, Alamo, SpawnAlamo
+
+; Other Scouts
+Menu, ScoutMenu, Add, Unmarked Scout, SpawnUnmarkedScout
+Menu, ScoutMenu, Add, K9 Scout, SpawnScoutK9
+Menu, VehicleMenu, Add, Livery Scouts, :ScoutMenu
+
+; TED Vehicles
+Menu, TEDMenu, Add, Traffic Scout, SpawnScoutTED
+Menu, TEDMenu, Add, Motorcycle, SpawnMotorcycle
+Menu, TEDMenu, Add, Traffic Alamo, SpawnAlamoTED
+Menu, VehicleMenu, Add, TED Vehicles, :TEDMenu
+
+; Other Vehicles
+Menu, OtherVehiclesMenu, Add, Interceptor, SpawnInterceptor
+Menu, OtherVehiclesMenu, Add, Crown Vic, SpawnVic
+;Menu, OtherVehiclesMenu, Add, Gang Alamo, SpawnAlamoGU
+Menu, OtherVehiclesMenu, Add, Alamo, SpawnAlamo
+Menu, VehicleMenu, Add, Other Vehicles, :OtherVehiclesMenu
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
 
@@ -1197,7 +1209,7 @@ SpawnAlamo:
 return
 
 SpawnBuffalo:
-	send, t/fspawn police2 4{enter}
+	send, t/fspawn policebuffalo2 5{enter}
 return
 
 SpawnMotorcycle:
@@ -1261,8 +1273,8 @@ SpawnScoutK9:
 return
 
 ParkCruiser:
-	send, t/delcruiser{enter}
-	sleep 500
+	send, t/parkcruiser{enter}
+	sleep 600
 	send, t {up}{enter}
 return
 
