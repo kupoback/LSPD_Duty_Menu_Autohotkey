@@ -5,8 +5,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global NormalCallSign := "3-U-12"
-global GangCallsign := "3-G-13"
+global NormalCallSign := "3-H-12"
+;global GangCallsign := "3-G-13"
 global AdamCallsign := "3-A-13"
 global TomCallsign := "TOM-10"
 global MaryCallsign := "MARY-10"
@@ -26,11 +26,13 @@ NumpadAdd::
 	send, {F7}
 return
 
-send, t/melow opens up the laptop, and loads MDC's database, entering in a phone number and smashing enter on the enter key
-sleep, 100
-
 ;Insert Key allows you to quickly run the trace rp
-NumPad3::
+^NumPad3::
+	send, t/melow opens up the laptop, and loads MDC's database, entering in a number and mashing enter on the enter key{enter}
+	sleep, 200
+	send, t/dolow The laptop would chirp, indicating the entered number is valid.{enter}
+	sleep 1000
+
     Gui, Destroy
     Gui, Add, DropdownList, w300 vRespondType, Positive Trace||Negative Trace
     Gui, Add, Button, Default x80 gTraceConfirm w80, Ok
@@ -39,10 +41,6 @@ NumPad3::
 
     TraceConfirm:
 		Gui,Submit
-		send, t/melow opens up the laptop, and loads MDC's database, entering in a number and mashing enter on the enter key{enter}
-		sleep, 200
-		send, t/dolow The laptop would chirp, indicating the entered number is valid.{enter}
-
 		sleep, 200
 		if (RespondType="Positive Trace") {
 			send, t/dolow The laptop would chirp, and start passively showing the location of the trace{enter}
@@ -53,24 +51,93 @@ NumPad3::
 return
 
 ;Numpad3 allows you to quickly run the reload trace rp
-NumPad9::
+^NumPad9::
+	send, t/trace{space}
+	sleep 500
+	send, t/melow hits refresh on the tab open in the MDC{enter}
+return
+
+;Insert Key allows you to quick respond to an ID
+^Ins::
+    Gui, Destroy
+    Gui, Add, Text,, Enter Respond ID:
+    Gui, Add, Edit, w300 vRespondId,
+    Gui, Add, DropdownList, w300 vRespondType, Respond To Call||Check GPS
+    Gui, Add, Button, Default x80 gRespondConfirm w80, Ok
+    ;Gui, Add, Button, Default x+0 gRespondCancel w80, Cancel
+    Gui, Show,, Respond ID
+    return
+
+    RespondConfirm:
+		Gui,Submit
+        if (RespondId!=""){
+            if (RespondType="Check GPS") {
+                send, t/setcall %RespondId%{enter}
+            } else if (RespondType="Respond To Call") {
+                send, t/resp %RespondId%{enter}
+            }
+        } else {
+            MsgBox,, ERROR, The respond ID is empty. Must enter a value.
+        }
+    return
+return
+
+^F9::
 	Gui, Destroy
-	Gui, Add, DropdownList, w300 vRespondType, Reload Positive Trace||Reload Negative Trace
-	Gui, Add, Button, Default x80 gReloadTraceConfirm w80, Ok
-	Gui, Show,, Respond ID
+	Gui, Add, Text,, Enter Item Type:
+	Gui, Add, Edit, w300 vItemId,
+	Gui, Add, DropdownList, w300 vNewOld, New Print Check||Already Checking
+	Gui, Add, Button, Default x80 gItemConfirm w80, Ok
+	Gui, Show,, Item ID
 	return
 
-	ReloadTraceConfirm:
-		Gui,Submit
-		send, t/melow looks over at the laptop, and reloads the open tab.{enter}
-		sleep, 200
-
-		if (RespondType="Reload Positive Trace") {
-			send, t/dolow The laptop would show a map of Los Santos, and start passively showing the location of the trace{enter}
-		} else if (RespondType="Reload Negative Trace") {
-			send, t/dolow The laptop would make a chirp, and a pop-up box would appear on the screen showing an error{enter}
+	ItemConfirm:
+		Gui, Submit
+		if (ItemId!="") {
+			if (NewOld="New Print Check") {
+				send, t/melow pulls out his container of Aluminum powder, and Zephyr brushs, opening the container{enter}
+				sleep 3000
+				send, t/melow dips the brush in the powder, and lightly coats the %ItemId% with the brush{enter}
+			} else {
+				send, t/melow dips the Zephyr brush into the tin of powder again, and recoats the brush{enter}
+				sleep 3000
+				send, t/melow light coats the %ItemId% with the brush{enter}
+			}
+			sleep 3000
+			send, t/melow grabs a second brush and wipes away any excess powder from the %ItemId%{enter}
+			sleep 3000
+			send, t/melow grabs some tape and places it over the location of some possible fingerprints, pressing down firmly{enter}
+			sleep 3000
+			send, t/melow transfer the tape to a lift plate, and secures it in place{enter}
+		} else {
+			MsgBox,, ERROR, The Item ID is empty. Must enter a value.
 		}
+	return
+return
 
+^F10::
+	Gui, Destroy
+	Gui, Add, Text,, Enter Vehicle Type:
+	Gui, Add, Edit, w300 vVehicleType,
+	Gui, Add, Button, Default x80 gVehicleConfirm w80, Ok
+	Gui, Show,, Vehicle ID
+	return
+
+	VehicleConfirm:
+		Gui, Submit
+		if (VehicleType!=""){
+			send, t/melow pulls out his container of Aluminum powder, and Zephyr brushs, opening the container{enter}
+			sleep 3000
+			send, t/melow dips the brush in the powder, and lightly coats the %VehicleType%'s steering wheel with the brush{enter}
+			sleep 3000
+			send, t/melow grabs a second brush and wipes away any excess powder from the %VehicleType%'s steering wheel{enter}
+			sleep 3000
+			send, t/melow grabs some tape and places it over the location of some possible fingerprints, pressing down firmly{enter}
+			sleep 3000
+			send, t/melow transfer the tape to a lift plate, and secures it in place{enter}
+		} else {
+			MsgBox,, Error, The Vehicle ID is empty. Must enter a value.
+		}
 	return
 return
 
@@ -99,7 +166,7 @@ Menu, FullMenu, Add, Park Cruiser, ParkCruiser
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, FullMenu, Add, Cuff, PDCuff
+;Menu, FullMenu, Add, Cuff, PDCuff
 ;Menu, FullMenu, Add, Uncuff, PDUncuff
 ;Menu, FullMenu, Add, Initial BLS, PDInitialBLS
 ;Menu, FullMenu, Add, Pursuit Force, LethalPursuit
@@ -153,16 +220,15 @@ Menu, TowMenu, Add, Untow Vehicle, UnTowVehicle
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, VehicleMenu, Add, Marked Scout, SpawnScout
-Menu, VehicleMenu, Add, Gang Scout, SpawnScoutGU
-Menu, VehicleMenu, Add, Gang Caracara, SpawnCaracaraGU
-Menu, VehicleMenu, Add, Slicktop Buffalo, SpawnBuffalo
+Menu, FullMenu, Add, Scout, SpawnUnmarkedScout
+Menu, FullMenu, Add, STX, SpawnBuffalo
+
 Menu, VehicleMenu, Add, Kamacho, SpawnKamacho
 Menu, VehicleMenu, Add, Drafter, SpawnDrafter
 Menu, VehicleMenu, Add, Flatbed, SpawnFlatbed
+Menu, VehicleMenu, Add, Crown Vic, SpawnVic
 
 ; Other Scouts
-Menu, ScoutMenu, Add, Unmarked Scout, SpawnUnmarkedScout
 Menu, ScoutMenu, Add, K9 Scout, SpawnScoutK9
 Menu, VehicleMenu, Add, Livery Scouts, :ScoutMenu
 
@@ -174,9 +240,9 @@ Menu, VehicleMenu, Add, TED Vehicles, :TEDMenu
 
 ; Other Vehicles
 Menu, OtherVehiclesMenu, Add, Interceptor, SpawnInterceptor
-Menu, OtherVehiclesMenu, Add, Crown Vic, SpawnVic
 ;Menu, OtherVehiclesMenu, Add, Gang Alamo, SpawnAlamoGU
 Menu, OtherVehiclesMenu, Add, Alamo, SpawnAlamo
+;Menu, OtherVehiclesMenu, Add, Gang Caracara, SpawnCaracaraGU
 Menu, VehicleMenu, Add, Other Vehicles, :OtherVehiclesMenu
 
 Menu, FullMenu, Add, Police Vehicles, :VehicleMenu
@@ -194,7 +260,7 @@ Menu, FullMenu, Add, Departmental Radio, :DRadioMenu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Menu, UnitMenu, Add, Rename to %NormalCallSign%, NormalUnit
-Menu, UnitMenu, Add, Rename to %GangCallsign%, LincolnUnit
+;Menu, UnitMenu, Add, Rename to %GangCallsign%, LincolnUnit
 Menu, UnitMenu, Add, Rename to %AdamCallsign%, AdamUnit
 Menu, UnitMenu, Add, Join Another Unit, JoinOtherUnit
 Menu, UnitMenu, Add, Rename to %TomCallsign%, TOMUnit
@@ -1209,7 +1275,7 @@ SpawnAlamo:
 return
 
 SpawnBuffalo:
-	send, t/fspawn policebuffalo2 5{enter}
+	send, t/fspawn policebuffalo2{enter}
 return
 
 SpawnMotorcycle:
@@ -1225,7 +1291,7 @@ SpawnKamacho:
 return
 
 SpawnVic:
-	send, t/fspawn police{enter}
+	send, t/fspawn police4{enter}
 return
 
 SpawnInterceptor:
@@ -1706,8 +1772,6 @@ return
 
 ;Start and end watch handlers
 StartWatch:
-	send, t/melow Undresses from his civilian clothing and hangs them in his locker and puts on his uniform{enter}
-	Sleep 500
 	send, t/melow grabs a body cam from the locker, securing it to his chest and turns it on {enter}
 	Sleep 500
 	send, t/dolow the light would start blinking green {enter}
