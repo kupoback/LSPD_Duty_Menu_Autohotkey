@@ -5,30 +5,35 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 
 ;These are the global variables that you will need to change.  All should be self explanitory.
-global CallSign := "EMR-1"
-global Rank := "EMR"
+global CallSign := ""
+global OldCallSign := ""
+global Rank := "Master-EMT"
 global Surname := "Onassis"
+Application = GTA5.exe
 
 ;self explanitory
 F10::
-	send, t/setcall -1{enter}
+	send, t{sleep 10}/setcall -1{enter}
 return
 
-^Ins::
-	send, t/anim medic{enter}
+^Numpad9::SetCallSign()
+
+; Medical RP
+F9::
+	WinActivate, ahk_exe %Application%
+	send, t{sleep 10}/anim medic{enter}
 	sleep 500
-	send, t/melow sets down her ALS bag, and begins to look over the patient{enter}
+	send, t{sleep 10}/melow sets down her ALS bag, and begins to look over the patient{enter}
 	sleep 500
-	send, t/dolow What injuries would I see on the individual?{enter}
+	send, t{sleep 10}/dolow What injuries would I see on the individual?{enter}
 return
-
-
 
 ; Responding to a call
 ^Numpad1::
+	WinActivate, ahk_exe %Application%
  	Gui, Destroy
 	Gui, Add, Text,, Call Type:
-    Gui, Add, DropdownList, w300 vCallType, PD||||SD
+    Gui, Add, DropdownList, w300 vCallType, PD||SD||||DOC
 	Gui, Add, Text,, 10-70?:
     Gui, Add, DropdownList, w300 vAsBackup, No||Yes
     Gui, Add, Button, Default x80 gRespConfirm w80, Ok
@@ -50,37 +55,14 @@ return
 		if (AsBackup="Yes") {
 			backupCall := " as 10-70"
 		}
-		
-		send, t/rlow %CallSign% Code 3 to %setCallType% call%backupCall%{enter}
-    return
-return
 
-; Code 6 at scene
-^Numpad2::
-	Gui, Destroy
-	Gui, Add, Text,, Call Type:
-    Gui, Add, DropdownList, w300 vCallType, PD||||SD
-    Gui, Add, Button, Default x80 gCodeConfirm w80, Ok
-    Gui, Add, Button, x+0 gGuiClose w80, Cancel
-    Gui, Show,, Code 6 Scene
-    return
-
-	setCallType := ""
-
-	CodeConfirm:
-		Gui,Submit
-		if (CallType="") {
-			setCallType := "last"
-		} else {
-			setCallType := "last " . CallType
-		}
-			
-		send, t/rlow %CallSign% is Code 6 at %setCallType% call{enter}
+		send,t{sleep 10}/rlow %CallSign% am Code 3 to %setCallType% call %backupCall%{enter}
     return
 return
 
 ; Response to Pillbox\Paleto
-^Numpad3::
+^Numpad2::
+	WinActivate, ahk_exe %Application%
  	Gui, Destroy
     Gui, Add, Text,, Number of Patients:
     Gui, Add, Edit, w300 vPatientCount,
@@ -91,7 +73,7 @@ return
 	Gui, Add, Text,, Code Type:
     Gui, Add, DropdownList, w300 vCodeType, Code 2||Code 3
 	Gui, Add, Text,, Call Type:
-    Gui, Add, DropdownList, w300 vCallType, PD||||SD
+    Gui, Add, DropdownList, w300 vCallType, PD||SD||||DOC
     Gui, Add, Button, Default x80 gPatientConfirm w80, Ok
     Gui, Add, Button, x+0 gGuiClose w80, Cancel
     Gui, Show,, Response to Hospital
@@ -107,8 +89,8 @@ return
 			} else {
 				setCallType := "last " . CallType
 			}
-			
-			send, t/rlow %CallSign% %CodeType% to %LocationType% with %PatientCount%x %PatientType% from %setCallType% call{enter}
+
+			send, t{sleep 10}/rlow %CallSign% am %CodeType% to %LocationType% with %PatientCount%x %PatientType% from %setCallType% call{enter}
 		} else {
 			return
 		}
@@ -116,16 +98,17 @@ return
 return
 
 ; 10-99 Call
-^Numpad4::
+^Numpad3::
+	WinActivate, ahk_exe %Application%
  	Gui, Destroy
 	Gui, Add, Text,, Location Type:
     Gui, Add, Edit, w300 vRespLocation,
 	Gui, Add, Text,, Status:
-    Gui, Add, DropdownList, w300 vStatus, 10-8||10-9
+    Gui, Add, DropdownList, w300 vStatus, 10-9||10-8||Code 3
 	Gui, Add, Text,, Static/Roaming:
     Gui, Add, DropdownList, w300 vMobility, Static||Roaming
 	Gui, Add, Text,, Call Type:
-    Gui, Add, DropdownList, w300 vRespCallType, PD||||SD
+    Gui, Add, DropdownList, w300 vRespCallType, PD||SD||||DOC
     Gui, Add, Button, Default x80 gResponseConfirm w80, Ok
     Gui, Add, Button, x+0 gGuiClose w80, Cancel
     Gui, Show,, 10-99 Call
@@ -133,29 +116,35 @@ return
 
 	setCallType := ""
 	setMobility := "to"
+	setRespondLocation := ""
 
 	ResponseConfirm:
 		Gui,Submit
-		if(RespLocation!=""){
-			if (RespCallType="") {
-				setCallType := "last"
-			} else {
-				setCallType := "last " . RespCallType
-			}
-			
-			if(Mobility="Roaming"){
-				setMobility := "roaming"
-			} else {
-				setMobility := "to"
-			}
-
-			send, t/rlow %CallSign% show %setCallType% call is 10-99, is %Status% %setMobility% %RespLocation%{enter}
+		if (RespCallType="") {
+			setCallType := "last"
+		} else {
+			setCallType := "last " . RespCallType
 		}
+
+		if(RespLocation!=""){
+			setRespondLocation := RespLocation
+		} else {
+			setRespondLocation := "Pillbox"
+		}
+
+		if(Mobility="Roaming"){
+			setMobility := "roaming"
+		} else {
+			setMobility := "to"
+		}
+
+		send, t{sleep 10}/rlow %CallSign% show %setCallType% call 10-99, am %Status% %setMobility% %setRespondLocation%{enter}
     return
 return
 
 ;Sidewalk Patient
-^Numpad5::
+^Numpad4::
+	WinActivate, ahk_exe %Application%
 	Gui, Destroy
 	Gui, Add, Text,, Location Type:
     Gui, Add, Edit, w300 vLocation,
@@ -167,9 +156,15 @@ return
 	SidewalkConfirm:
 		Gui,Submit
 		if(Location!=""){
-			send, t/rlow %CallSign% is 10-9 with sidewalk patient at %Location%{enter}
+			send, t{sleep 10}/rlow %CallSign% am 10-9 with sidewalk patient at %Location%{enter}
 		}
 	return
+return
+
+;Code 6 on scene
+^Numpad5::
+	WinActivate, ahk_exe %Application%
+	send, t{sleep 10}/rlow %CallSign% am Code 6
 return
 
 ;kill switch
@@ -180,15 +175,11 @@ F3::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Menu, FullMenu, Add, Park Cruiser, ParkAmbulance
-
-Menu, StartMenu, Add, Start Solo Watch, StartWatch
-;Menu, StartMenu, Add, Start Other Watch, StartWatchElse
-Menu, FullMenu, Add, Start Menu, :StartMenu
-
-Menu, EndMenu, Add, End Solo Watch, EndWatch
-;Menu, EndMenu, Add, End Other Watch, EndWatchElse
-Menu, FullMenu, Add, End Menu, :EndMenu
+Menu, FullMenu, Add, Set CallSign, SetCallSign
+Menu, FullMenu, Add, Start Service, StartService
+Menu, FullMenu, Add, Start 10-9 Service, StartServiceNotAvail
+Menu, FullMenu, Add, Rename Unit, RenameUnit
+Menu, FullMenu, Add, End Service, EndWService
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -198,83 +189,93 @@ CoordMode, Menu, Screen
 Menu, FullMenu, Show, % A_ScreenWidth/2, % A_ScreenHeight/2
 return
 
-ParkAmbulance:
-	send, t/delambulance{enter}
-return
-
-;Start watch under someone else
-StartWatchElse:
-	StartWatchRP()
-	;Gui, Destroy
-    ;Gui, Add, Text,, Enter Unit Name:
-    ;Gui, Add, Edit, w300 vUnitName,
-    ;Gui, Add, Button, Default x80 gUnitConfirm w80, Ok
-    ;Gui, Add, Button, Default x+0 gUnitCancel w80, Cancel
-    ;Gui, Show,, Unit Name
-    ;return
-
-    ;UnitConfirm:
-	;	Gui,Submit
-    ;    if (UnitName!=""){
-    ;        StartWatchRP()
-	;		send, t/joinunit %UnitName%{enter}
-	;		sleep 500
-	;		send, t/rlow %Rank% %Surname% is start service under %UnitName%{enter}
-	;		sleep 500
-    ;    } else {
-    ;        MsgBox,, ERROR, The respond ID is empty. Must enter a value.
-    ;    }
-    ;return
-return
-
 ;Start watch handler
-StartWatch:
-	StartWatchRP()
-	;send, t/createunit %CallSign% {enter}
-	;Sleep 750
-	;send, t/rlow %Rank% %Surname% is form %CallSign% and 10-8 from Pillbox{enter}
-    ;sleep 500
+StartService:
+	StartServiceRP()
+	send, t{sleep 10}/createunit %CallSign% {enter}
+	Sleep 750
+	send, t{sleep 10}/rlow %Rank% %Surname% am form %CallSign%, am 10-8 from Pillbox{enter}
+    sleep 500
+return
+
+StartServiceNotAvail:
+	StartServiceRP()
+	send, t{sleep 10}/createunit %CallSign% {enter}
+	Sleep 750
+	send, t{sleep 10}/rlow %Rank% %Surname% am form %CallSign%, am 10-9 from Pillbox{enter}
+    sleep 500
 return
 
 ;End watch handler
-EndWatchElse:
-	;send, t/rlow %Rank% %Surname% is disband %CallSign% and 10-9 end service.{enter}
-	;sleep 500
-	EndWatchRP()
+EndWService:
+	send, t{sleep 10}/rlow %Rank% %Surname% am disband %CallSign%, am 10-9 end service.{enter}
+	sleep 500
+	EndServiceRP()
 return
 
-;End watch handler
-EndWatch:
-	;send, t/rlow %Rank% %Surname% is disband %CallSign% and 10-9 end service.{enter}
-	;sleep 500
-	EndWatchRP()
+RenameUnit:
+	send, t{sleep 10}/rlow %OldCallSign% am rename into %CallSign%{enter}
 return
 
-StartWatchRP()
+StartServiceRP()
 {
-	send, t/melow takes off her clothes, folding them neatly and places it into the locker, grabbing her uniform{enter}
+	send, t{sleep 10}/melow takes off her clothes, folding them neatly and places it into the locker, grabbing her uniform{enter}
 	sleep 500
-	send, t/melow puts on her uniform, and puts on her gloves{enter}
+	send, t{sleep 10}/melow puts on her uniform, and puts on her gloves{enter}
 	sleep 500
-	send, t/melow grabs a body cam from the locker, securing it to her chest and turns it on{enter}
+	send, t{sleep 10}/melow grabs a body cam from the locker, securing it to her chest and turns it on, setting it to record{enter}
 	Sleep 500
-	send, t/time {enter}
+	send, t{sleep 10}/time{enter}
 	Sleep 750
 }
 
-EndWatchRP()
+EndServiceRP()
 {
-	send, t/disbandunit{enter}
+	send, t{sleep 10}/disbandunit{enter}
 	sleep 500
-	send, t/leaveunit{enter}
+	send, t{sleep 10}/melow takes off her uniform, putting on her normal clothing{enter}
 	sleep 500
-	send, t/melow takes off her uniform, putting on her normal clothing{enter}
+	send, t{sleep 10}/melow takes off her on-duty bodycam placing it in her locker and takes out her civilian bodycam attaching it, turning it on{enter}
 	sleep 500
-	send, t/melow takes off her on-duty bodycam placing it in her locker and takes out her civilian bodycam attaching it, turning it on{enter}
+	send, t{sleep 10}/time{enter}
 	sleep 500
-	send, t/time{enter}
-	sleep 500
+	ClearCallSign()
 }
+
+SetCallSign()
+{
+	Gui, Destroy
+	Gui, Add, Text,, Unit:
+    Gui, Add, Edit, w300 vCallSign gText, %CallSign%
+	Gui, Add, Button, Default x80 gCallSignConfirm w80, Ok
+    Gui, Add, Button, x+0 gGuiClose w80, Cancel
+    Gui, Show,, 10-99 Call
+	return
+
+	CallSignConfirm:
+		Gui,Submit
+		FileRead, OldCallSign, %A_ScriptDir%\md-callsign.txt
+
+		file := FileOpen(A_ScriptDir . "\md-callsign.txt", "w")
+		file.Write(CallSign)
+		file.Close()
+
+		FileRead, CallSign, %A_ScriptDir%\md-callsign.txt
+	return
+}
+
+ClearCallSign()
+{
+	file := FileOpen(A_ScriptDir . "\md-callsign.txt", "w")
+	file.Write()
+	file.Close()
+
+	OldCallSign := ""
+}
+
+Text:
+    Gui, Submit, NoHide
+return
 
 ; Closes the GUI
 GuiClose:
